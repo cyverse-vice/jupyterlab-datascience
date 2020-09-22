@@ -1,4 +1,4 @@
-FROM jupyter/datascience-notebook:latest
+FROM jupyter/datascience-notebook:lab-2.2.5
 
 USER root
 
@@ -8,6 +8,11 @@ RUN apt-get update && apt-get install -y lsb-release wget apt-transport-https cu
 RUN wget -qO - https://packages.irods.org/irods-signing-key.asc | apt-key add - && \
     echo "deb [arch=amd64] https://packages.irods.org/apt/ bionic main" >> /etc/apt/sources.list.d/renci-irods.list && \
     apt-get update
+
+# install jupyterlab git extension
+RUN jupyter labextension install @jupyterlab/git && \
+        pip install --upgrade jupyterlab-git && \
+        jupyter serverextension enable --py jupyterlab_git
 
 # Install CyberDuck CLI
 RUN echo -e "deb https://s3.amazonaws.com/repo.deb.cyberduck.io stable main" | tee /etc/apt/sources.list.d/cyberduck.list > /dev/null && \
@@ -23,14 +28,6 @@ RUN groupadd jovyan && usermod -aG jovyan jovyan && usermod -d /home/jovyan -u 1
 
 USER jovyan
 WORKDIR /home/jovyan
-
-# install jupyterlab git extension
-RUN jupyter labextension install @jupyterlab/git && \
-    pip install --upgrade jupyterlab-git && \
-    jupyter serverextension enable --py jupyterlab_git
-
-# Build the new Lab
-RUN jupyter lab build
 
 EXPOSE 8888
 
