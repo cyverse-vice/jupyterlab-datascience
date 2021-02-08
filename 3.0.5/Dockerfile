@@ -1,22 +1,27 @@
-FROM jupyter/datascience-notebook:latest
+FROM jupyter/datascience-notebook:lab-3.0.5
 
 USER root
 
 # Install a few dependencies for iCommands, text editing, and monitoring instances
 RUN apt-get update && apt-get install -y lsb-release wget apt-transport-https curl supervisor nginx gnupg2 libfuse2 nano htop gcc less nodejs software-properties-common apt-utils glances
-
 RUN curl "http://ftp.debian.org/debian/pool/main/g/glibc/multiarch-support_2.28-10_amd64.deb" -O && \
     dpkg -i multiarch-support_2.28-10_amd64.deb && \
     rm multiarch-support_2.28-10_amd64.deb
-
 RUN curl "http://ftp.se.debian.org/debian/pool/main/o/openssl/libssl1.0.0_1.0.1t-1+deb8u8_amd64.deb" -O && \
     dpkg -i libssl1.0.0_1.0.1t-1+deb8u8_amd64.deb && \
     rm libssl1.0.0_1.0.1t-1+deb8u8_amd64.deb
-
 RUN wget https://files.renci.org/pub/irods/releases/4.1.12/ubuntu14/irods-icommands-4.1.12-ubuntu14-x86_64.deb && \
     dpkg -i irods-icommands-4.1.12-ubuntu14-x86_64.deb && \
-    apt-get install -f && \
     rm irods-icommands-4.1.12-ubuntu14-x86_64.deb
+
+# install jupyterlab git extension
+RUN jupyter labextension install @jupyterlab/git && \
+    pip install --upgrade jupyterlab-git && \
+    jupyter serverextension enable --py jupyterlab_git
+
+# install iRODS plugin
+RUN jupyter labextension install ijab && \
+    pip install jupyterlab_irods
 
 # Install CyberDuck CLI
 RUN echo -e "deb https://s3.amazonaws.com/repo.deb.cyberduck.io stable main" | tee /etc/apt/sources.list.d/cyberduck.list > /dev/null && \
@@ -32,14 +37,6 @@ RUN groupadd jovyan && usermod -aG jovyan jovyan && usermod -d /home/jovyan -u 1
 
 USER jovyan
 WORKDIR /home/jovyan
-
-# install jupyterlab git extension
-RUN jupyter labextension install @jupyterlab/git && \
-    pip install --upgrade jupyterlab-git && \
-    jupyter serverextension enable --py jupyterlab_git
-
-# Build the new Lab
-RUN jupyter lab build
 
 EXPOSE 8888
 
