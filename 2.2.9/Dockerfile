@@ -1,4 +1,4 @@
-FROM jupyter/datascience-notebook:lab-3.0.5
+FROM jupyter/datascience-notebook:lab-2.2.9
 
 USER root
 
@@ -23,18 +23,24 @@ RUN wget -qO - https://packages.irods.org/irods-signing-key.asc | apt-key add - 
 
 RUN apt install -y irods-icommands
 
+# install jupyterlab git extension
+RUN jupyter labextension install @jupyterlab/git && \
+        pip install --upgrade jupyterlab-git && \
+        jupyter serverextension enable --py jupyterlab_git
+
+# install jupyterlab github extention
+RUN jupyter labextension install @jupyterlab/github && \
+        jupyter lab build
+
+# Install CyberDuck CLI
+RUN echo "deb https://s3.amazonaws.com/repo.deb.cyberduck.io stable main" > /etc/apt/sources.list.d/cyberduck.list && \
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys FE7097963FEFBE72 && \
+    apt-get update && \
+    apt-get install duck
+
 # install iRODS plugin
 RUN jupyter labextension install ijab && \
     pip install jupyterlab_irods
-
-# Install CyberDuck CLI
-RUN echo -e "deb https://s3.amazonaws.com/repo.deb.cyberduck.io stable main" | tee /etc/apt/sources.list.d/cyberduck.list > /dev/null && \
-apt-key adv --keyserver keyserver.ubuntu.com --recv-keys FE7097963FEFBE72 && \
-apt-get update && \
-apt-get install duck
-
-# Install Github widget == not ready for 3.0.*
-#RUN jupyter labextension install @jupyterlab/github
 
 # Install and configure jupyter lab.
 COPY jupyter_notebook_config.json /opt/conda/etc/jupyter/jupyter_notebook_config.json
@@ -42,7 +48,10 @@ COPY jupyter_notebook_config.json /opt/conda/etc/jupyter/jupyter_notebook_config
 # Add the jovyan user to UID 1000
 RUN groupadd jovyan && usermod -aG jovyan jovyan && usermod -d /home/jovyan -u 1000 jovyan
 
-# Rebuild the Jupyter Lab with new tools
+RUN apt-get update && apt-get install -y sudo
+RUN usermod -aG sudo jovyan
+RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
 RUN jupyter lab build
 
 USER jovyan

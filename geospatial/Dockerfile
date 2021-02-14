@@ -1,4 +1,4 @@
-FROM cyversevice/jupyterlab-datascience:latest 
+FROM cyversevice/jupyterlab-datascience:2.2.9 
 
 USER root
 
