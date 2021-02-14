@@ -3,25 +3,25 @@ version: 2.1
 jobs:
   build0:
     docker:
-      - image: cyversevice/jupyter-datascience:latest
+      - image: cyversevice/jupyterlab-datascience:latest
     steps:
       - checkout
       - run: jupyter lab --version
   build1:
     docker:
-      - image: cyversevice/jupyter-datascience:3.0.5
+      - image: cyversevice/jupyterlab-datascience:3.0.5
     steps:
       - checkout
       - run: jupyter lab --version
   build2:
     docker:
-      - image: cyversevice/jupyter-datascience:2.2.9
+      - image: cyversevice/jupyterlab-datascience:2.2.9
     steps:
       - checkout
       - run: jupyter lab --version
   build3:
     docker:
-      - image: cyversevice/jupyter-datascience:2.2.5
+      - image: cyversevice/jupyterlab-datascience:2.2.5
     steps:
       - checkout
       - run: jupyter lab --version
