@@ -2,7 +2,7 @@
  [![license](https://img.shields.io/badge/license-BSD3-red.svg?style=flat-square)](https://opensource.org/licenses/BSD-3-Clause) ![GitHub all releases](https://img.shields.io/github/downloads/cyverse-vice/jupyterlab-datascience/total?style=flat-square)
 
 # jupyterlab-datascience
-Project Jupyter Data Science Notebook with CyVerse addins 
+[Project Jupyter](https://jupyter.org/) Data Science Notebook with CyVerse addins 
 
 Jupyter Lab Datascience image built upon [Project Jupyter's Datascience Notebook](https://hub.docker.com/r/jupyter/datascience) for [CyVerse VICE](https://cyverse-visual-interactive-computing-environment.readthedocs-hosted.com/en/latest/index.html). Project Jupyter's base image requires a couple additional configuration files for it be compatible with CyVerse Kubernetes orchestration and iRODS data store.
 
