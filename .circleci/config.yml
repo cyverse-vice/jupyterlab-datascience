@@ -6,25 +6,25 @@ jobs:
       - image: cyversevice/jupyter-datascience:latest
     steps:
       - checkout
-      - run: jupyter lab version
+      - run: jupyter lab --version
   build1:
     docker:
       - image: cyversevice/jupyter-datascience:3.0.5
     steps:
       - checkout
-      - run: jupyter lab version
+      - run: jupyter lab --version
   build2:
     docker:
       - image: cyversevice/jupyter-datascience:2.2.9
     steps:
       - checkout
-      - run: jupyter lab version
+      - run: jupyter lab --version
   build3:
     docker:
       - image: cyversevice/jupyter-datascience:2.2.5
     steps:
       - checkout
-      - run: jupyter lab version
+      - run: jupyter lab --version
       
 workflows:
   build:
