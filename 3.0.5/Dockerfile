@@ -23,18 +23,14 @@ RUN wget -qO - https://packages.irods.org/irods-signing-key.asc | apt-key add - 
 
 RUN apt install -y irods-icommands
 
-# install iRODS plugin
-RUN jupyter labextension install ijab && \
-    pip install jupyterlab_irods
-
 # Install CyberDuck CLI
 RUN echo -e "deb https://s3.amazonaws.com/repo.deb.cyberduck.io stable main" | tee /etc/apt/sources.list.d/cyberduck.list > /dev/null && \
 apt-key adv --keyserver keyserver.ubuntu.com --recv-keys FE7097963FEFBE72 && \
 apt-get update && \
 apt-get install duck
 
-# Install Github widget == not ready for 3.0.*
-#RUN jupyter labextension install @jupyterlab/github
+# Install Github widget
+# RUN jupyter labextension install @jupyterlab/github
 
 # Install and configure jupyter lab.
 COPY jupyter_notebook_config.json /opt/conda/etc/jupyter/jupyter_notebook_config.json
@@ -49,12 +45,25 @@ RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 # Rebuild the Jupyter Lab with new tools
 RUN jupyter lab build
 
+# purge older nodejs
+RUN apt purge nodejs -y
+
 USER jovyan
 WORKDIR /home/jovyan
 
+# install iRODS plugin
+RUN conda install -c conda-forge nodejs -y
+RUN pip install jupyterlab_irods==3.0.*
+
+USER root
+RUN jupyter serverextension enable --py jupyterlab_irods
+RUN jupyter labextension install ijab
+
+USER jovyan
 EXPOSE 8888
 
 COPY entry.sh /bin
 RUN mkdir -p /home/jovyan/.irods
 
 ENTRYPOINT ["bash", "/bin/entry.sh"]
+
