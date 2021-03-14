@@ -39,8 +39,7 @@ COPY jupyter_notebook_config.json /opt/conda/etc/jupyter/jupyter_notebook_config
 RUN groupadd jovyan && usermod -aG jovyan jovyan && usermod -d /home/jovyan -u 1000 jovyan
 
 RUN apt-get update && apt-get install -y sudo
-RUN usermod -aG sudo jovyan
-RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+RUN echo 'ALL ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 # Rebuild the Jupyter Lab with new tools
 RUN jupyter lab build
