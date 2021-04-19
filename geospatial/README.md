@@ -1,1 +1,1 @@
-geospatial v 2.2.5
+geospatial v2.2.9
