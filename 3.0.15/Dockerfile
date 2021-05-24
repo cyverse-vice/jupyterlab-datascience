@@ -1,4 +1,4 @@
-FROM jupyter/datascience-notebook:lab-3.0.5
+FROM jupyter/datascience-notebook:lab-3.0.15
 
 USER root
 
@@ -65,4 +65,3 @@ COPY entry.sh /bin
 RUN mkdir -p /home/jovyan/.irods
 
 ENTRYPOINT ["bash", "/bin/entry.sh"]
-
