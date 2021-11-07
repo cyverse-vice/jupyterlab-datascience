@@ -25,11 +25,11 @@ The container for running JupyterLab is hosted on DockerHub and can be started l
 
 
 ```
-docker pull cyversevice/jupyterlab-datascience:latest
+docker pull harbor.cyverse.org/vice/jupyter/datascience:latest
 ```
 
 ```
-docker run -it --rm -d cyversevice/jupyterlab-datascience:latest
+docker run -it --rm -d harbor.cyverse.org/vice/jupyter/datascience:latest
 ```
 
 ## Run Docker container in CyVerse VICE
@@ -43,13 +43,13 @@ You can build a new Docker container with additional dependencies from this Dock
 To test the container locally:
 
 ```
-docker run -it --rm -v /$HOME:/work --workdir /work -p 8888:8888 -e REDIRECT_URL=http://localhost:8888 cyversevice/jupyterlab-datascience:latest
+docker run -it --rm -v /$HOME:/work --workdir /work -p 8888:8888 -e REDIRECT_URL=http://localhost:8888 harbor.cyverse.org/vice/jupyter/datascience:latest
 ```
 
 To build your own container with a Dockerfile and additional dependencies, pull the pre-built image from DockerHub:
 
 ```
-FROM cyversevice/rstudio-verse:latest
+FROM harbor.cyverse.org/vice/jupyter/datascience:latest
 ```
 
 Follow the instructions in the [VICE manual for integrating your own tools and apps](https://cyverse-visual-interactive-computing-environment.readthedocs-hosted.com/en/latest/developer_guide/building.html).
