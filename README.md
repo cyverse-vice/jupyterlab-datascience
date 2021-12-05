@@ -6,7 +6,7 @@
 
 Jupyter Lab Datascience image built from the [Datascience Notebook](https://hub.docker.com/r/jupyter/datascience-notebook) for [CyVerse VICE](https://cyverse-visual-interactive-computing-environment.readthedocs-hosted.com/en/latest/index.html). Project Jupyter's base image requires a couple additional configuration files for it be compatible with CyVerse Kubernetes orchestration and iRODS data store.
 
-[![CircleCI](https://circleci.com/gh/cyverse-vice/jupyterlab-datascience.svg?style=svg)](https://circleci.com/gh/cyverse-vice/jupyterlab-datascience) ![GH actions branch parameter](https://github.com/github/docs/actions/workflows/main.yml/badge.svg?branch=main) ![GitHub commits since tagged version](https://img.shields.io/github/commits-since/cyverse-vice/jupyterlab-datascience/latest/main?style=flat-square) [![Docker Pulls](https://img.shields.io/docker/pulls/cyversevice/Datascience?color=orange&logo=docker&logoColor=white)](https://hub.docker.com/r/cyversevice/jupyterlab-datascience) 
+![GH actions branch parameter](https://github.com/github/docs/actions/workflows/main.yml/badge.svg?branch=main) ![GitHub commits since tagged version](https://img.shields.io/github/commits-since/cyverse-vice/jupyterlab-datascience/latest/main?style=flat-square) [![Docker Pulls](https://img.shields.io/docker/pulls/cyversevice/Datascience?color=orange&logo=docker&logoColor=white)](https://hub.docker.com/r/cyversevice/jupyterlab-datascience) 
 
 quick launch | size | 
 ------------ | ---- | 
