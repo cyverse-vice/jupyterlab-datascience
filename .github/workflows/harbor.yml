@@ -46,17 +46,41 @@ jobs:
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
 
-      - name: Build and push v2.2.x
-        id: docker_build_two_two_x
+      - name: Build and push v2.2 nine
+        id: docker_build_two_two_nine
         uses: docker/build-push-action@v2.6.1
         with:
-          context: 2.2.x
-          file: 2.2.x/Dockerfile
+          context: 2.2.9
+          file: 2.2.9/Dockerfile
           builder: ${{ steps.buildx.outputs.name }}
           push: true
           tags: harbor.cyverse.org/vice/jupyter/datascience:2.2.9
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
 
+      - name: Build and push geospatial latest
+        id: docker_build_geospatial_latest
+        uses: docker/build-push-action@v2.6.1
+        with:
+          context: geospatial 
+          file: geospatial/latest/Dockerfile
+          builder: ${{ steps.buildx.outputs.name }}
+          push: true
+          tags: harbor.cyverse.org/vice/jupyter/geospatial:latest
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
+ 
+      - name: Build and push geospatial v2.2.9
+        id: docker_build_geospatial_two_two_nine
+        uses: docker/build-push-action@v2.6.1
+        with:
+          context: geospatial 
+          file: geospatial/2.2.9/Dockerfile
+          builder: ${{ steps.buildx.outputs.name }}
+          push: true
+          tags: harbor.cyverse.org/vice/jupyter/geospatial:2.2.9
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache          
+          
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
