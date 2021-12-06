@@ -10,18 +10,19 @@ RUN apt-get update && \
 # RUN chown -R jovyan:jovyan /opt/conda
 USER jovyan
 
-RUN conda update -n base conda 
-
+RUN conda update conda 
+RUN conda config --remove channels conda-forge
+RUN conda config --add channels conda-forge
+RUN conda config --set channel_priority strict
 COPY environment.yml environment.yml
-RUN conda env create -f environment.yml
+RUN conda env create -f environment.yml python=3.9.5
 RUN echo ". /opt/conda/etc/profile.d/conda.sh" >> /home/jovyan/.bashrc && \
     echo "conda activate geospatial" >> /home/jovyan/.bashrc
 RUN source /home/jovyan/.bashrc
 
 # Install JupyterLab widget extensions
-RUN conda install -c conda-forge jupyter_bokeh
 RUN pip install jupyterlab-geojson sidecar
-RUN jupyter labextension install @jupyterlab/toc
+RUN sudo chown -R jovyan:jovyan /opt/conda/share
 RUN jupyter labextension install \
     ipyvolume \
     itkwidgets \    
@@ -29,10 +30,7 @@ RUN jupyter labextension install \
     jupyter-leaflet \
     jupyter-threejs \
  && npm cache clean --force
-# add bqplot extension
-RUN jupyter labextension install bqplot && \
-    jupyter nbextension install bqplot --py --symlink --sys-prefix && \ 
-    jupyter nbextension enable bqplot --py --sys-prefix
+
 RUN jupyter lab build
 
 RUN conda clean --all -f -y

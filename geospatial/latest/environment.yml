@@ -1,12 +1,11 @@
 name: geospatial
 channels:
   - conda-forge
-  - defaults
-  - anaconda
 dependencies:
   - altair
   - awscli
   - bottleneck
+  - bqplot
   - contextily
   - cython  
   - dask
@@ -18,6 +17,7 @@ dependencies:
   - ipyparallel
   - ipyvolume
   - ipywidgets
+  - jupyter_bokeh
   - matplotlib
   - ncurses
   - netcdf4
@@ -33,6 +33,7 @@ dependencies:
   - pyresample
   - pyproj
   - pysal
+  - python=3.9.5
   - rasterio
   - s3fs
   - scikit-learn
