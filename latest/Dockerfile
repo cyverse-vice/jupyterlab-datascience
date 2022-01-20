@@ -41,6 +41,10 @@ RUN wget -qO - https://packages.irods.org/irods-signing-key.asc | apt-key add - 
 RUN wget -q -c https://dl.google.com/go/go1.17.6.linux-amd64.tar.gz -O - | sudo tar -xz -C /usr/local
 ENV PATH=$PATH:/usr/local/go/bin 
 
+# Install Rust
+RUN apt-get update && \
+    apt-get install -y cargo rustc
+
 # Install CyberDuck CLI
 RUN echo -e "deb https://s3.amazonaws.com/repo.deb.cyberduck.io stable main" | tee /etc/apt/sources.list.d/cyberduck.list > /dev/null && \
     apt-key adv --keyserver keyserver.ubuntu.com --recv-keys FE7097963FEFBE72 && \
