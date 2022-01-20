@@ -38,7 +38,7 @@ RUN wget -qO - https://packages.irods.org/irods-signing-key.asc | apt-key add - 
     rm -rf /var/lib/apt/lists/*
 
 # Install Go
-RUN wget -q -c https://dl.google.com/go/go1.16.4.linux-amd64.tar.gz -O - | sudo tar -xz -C /usr/local
+RUN wget -q -c https://dl.google.com/go/go1.17.6.linux-amd64.tar.gz -O - | sudo tar -xz -C /usr/local
 ENV PATH=$PATH:/usr/local/go/bin 
 
 # Install CyberDuck CLI
