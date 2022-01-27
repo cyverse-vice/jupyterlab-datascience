@@ -6,11 +6,11 @@
 
 Jupyter Lab Datascience image built from the [Datascience Notebook](https://hub.docker.com/r/jupyter/datascience-notebook) for [CyVerse VICE](https://cyverse-visual-interactive-computing-environment.readthedocs-hosted.com/en/latest/index.html). Project Jupyter's base image requires a couple additional configuration files for it be compatible with CyVerse Kubernetes orchestration and iRODS data store.
 
-![GH actions branch parameter](https://github.com/github/docs/actions/workflows/main.yml/badge.svg?branch=main) ![GitHub commits since tagged version](https://img.shields.io/github/commits-since/cyverse-vice/jupyterlab-datascience/latest/main?style=flat-square) [![Docker Pulls](https://img.shields.io/docker/pulls/cyversevice/Datascience?color=orange&logo=docker&logoColor=white)](https://hub.docker.com/r/cyversevice/jupyterlab-datascience) 
+![GH actions branch parameter](https://github.com/github/docs/actions/workflows/main.yml/badge.svg?branch=main) ![GitHub commits since tagged version](https://img.shields.io/github/commits-since/cyverse-vice/jupyterlab-datascience/latest/main?style=flat-square) 
 
-quick launch | size | 
------------- | ---- | 
-<a href="https://de.cyverse.org/apps/de/cc77b788-bc45-11eb-9934-008cfa5ae621/launch?saved-launch-id=4ab1f690-f360-4bba-bef9-d22f9f7b82f9" target="_blank"><img src="https://img.shields.io/badge/Datascience-latest-orange?style=plastic&logo=jupyter"></a> | [![SIZE](https://img.shields.io/docker/image-size/cyversevice/jupyterlab-datascience/latest.svg)](https://img.shields.io/docker/image-size/cyversevice/jupyterlab-datascience/latest) |
+quick launch | 
+------------ | 
+<a href="https://de.cyverse.org/apps/de/cc77b788-bc45-11eb-9934-008cfa5ae621/launch?saved-launch-id=4ab1f690-f360-4bba-bef9-d22f9f7b82f9" target="_blank"><img src="https://img.shields.io/badge/Datascience-latest-orange?style=plastic&logo=jupyter"></a> |
 
 # Instructions
 
