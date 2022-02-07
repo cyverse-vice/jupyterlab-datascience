@@ -54,6 +54,12 @@ RUN echo -e "deb https://s3.amazonaws.com/repo.deb.cyberduck.io stable main" | t
 # Install Github widget
 # RUN jupyter labextension install @jupyterlab/github
 
+# Install GitHub CLI
+RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/etc/apt/trusted.gpg.d/githubcli-archive-keyring.gpg && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/trusted.gpg.d/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" > /etc/apt/sources.list.d/github-cli.list &&
+    apt update &&
+    apt install gh
+
 # Install and configure jupyter lab.
 COPY jupyter_notebook_config.json /opt/conda/etc/jupyter/jupyter_notebook_config.json
 
