@@ -46,8 +46,8 @@ RUN apt update && \
     apt install -y cargo rustc
 
 # Install CyberDuck CLI
-RUN echo -e "deb https://s3.amazonaws.com/repo.deb.cyberduck.io stable main" | tee /etc/apt/sources.list.d/cyberduck.list > /dev/null && \
-    apt-get adv --keyserver keyserver.ubuntu.com --recv-keys FE7097963FEFBE72 && \
+RUN echo "deb https://s3.amazonaws.com/repo.deb.cyberduck.io stable main" > /etc/apt/sources.list.d/cyberduck.list && \
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys FE7097963FEFBE72 && \
     apt update && \
     apt install duck
 
