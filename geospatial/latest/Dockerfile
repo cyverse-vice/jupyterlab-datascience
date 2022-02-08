@@ -2,9 +2,9 @@ FROM harbor.cyverse.org/vice/jupyter/datascience:latest
 
 USER root
 
-RUN apt-get update && \
-    apt-get install -y libfreetype6-dev pkg-config libx11-dev && \
-    apt-get clean && \
+RUN apt update && \
+    apt install -y libfreetype6-dev pkg-config libx11-dev && \
+    apt clean && \
     rm -rv /var/lib/apt/lists/*
 
 # RUN chown -R jovyan:jovyan /opt/conda
@@ -14,8 +14,8 @@ RUN conda update conda
 RUN conda config --remove channels conda-forge
 RUN conda config --add channels conda-forge
 RUN conda config --set channel_priority strict
-COPY environment.yml environment.yml
-RUN conda env create -f environment.yml python=3.9.5
+COPY environment.yml .
+RUN conda env create -f environment.yml
 RUN echo ". /opt/conda/etc/profile.d/conda.sh" >> /home/jovyan/.bashrc && \
     echo "conda activate geospatial" >> /home/jovyan/.bashrc
 RUN source /home/jovyan/.bashrc
