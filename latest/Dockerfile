@@ -47,7 +47,7 @@ RUN apt update && \
 
 # Install CyberDuck CLI
 RUN echo -e "deb https://s3.amazonaws.com/repo.deb.cyberduck.io stable main" | tee /etc/apt/sources.list.d/cyberduck.list > /dev/null && \
-    apt adv --keyserver keyserver.ubuntu.com --recv-keys FE7097963FEFBE72 && \
+    apt-get adv --keyserver keyserver.ubuntu.com --recv-keys FE7097963FEFBE72 && \
     apt update && \
     apt install duck
 
