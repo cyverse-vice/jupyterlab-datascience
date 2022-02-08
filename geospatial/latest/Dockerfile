@@ -14,8 +14,8 @@ RUN conda update conda
 RUN conda config --remove channels conda-forge
 RUN conda config --add channels conda-forge
 RUN conda config --set channel_priority strict
-COPY environment.yml .
-RUN conda env create -f environment.yml
+COPY environment.yml /home/jovyan/ 
+RUN conda env create -f /home/jovyan/environment.yml
 RUN echo ". /opt/conda/etc/profile.d/conda.sh" >> /home/jovyan/.bashrc && \
     echo "conda activate geospatial" >> /home/jovyan/.bashrc
 RUN source /home/jovyan/.bashrc
