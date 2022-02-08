@@ -3,24 +3,24 @@ FROM jupyter/datascience-notebook:latest
 USER root
 
 # Install a few dependencies for iCommands, text editing, and monitoring instances
-RUN apt-get update && \
-    apt-get install -y lsb-release apt-transport-https curl gnupg2 libfuse2 gcc less nodejs software-properties-common apt-utils glances htop nano  && \
-    apt-get clean && \
+RUN apt update && \
+    apt install -y lsb-release apt-transport-https curl gnupg2 libfuse2 gcc less nodejs software-properties-common apt-utils glances htop nano  && \
+    apt clean && \
     rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update && \
-    apt-get install -y vim-nox && \
-    apt-get clean && \
+RUN apt update && \
+    apt install -y vim-nox && \
+    apt clean && \
     rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update && \
-    apt-get install -y emacs-nox && \
-    apt-get clean && \
+RUN apt update && \
+    apt install -y emacs-nox && \
+    apt clean && \
     rm -rf /var/lib/apt/lists/*
 
 RUN wget -qO - https://packages.irods.org/irods-signing-key.asc | apt-key add - && \
     echo "deb [arch=amd64] https://packages.irods.org/apt/ bionic main" > /etc/apt/sources.list.d/renci-irods.list && \
-    apt-get update && \
+    apt update && \
     wget -q -c \
     http://security.ubuntu.com/ubuntu/pool/main/p/python-urllib3/python-urllib3_1.22-1ubuntu0.18.04.2_all.deb \
     http://security.ubuntu.com/ubuntu/pool/main/r/requests/python-requests_2.18.4-2ubuntu0.1_all.deb \
@@ -34,7 +34,7 @@ RUN wget -qO - https://packages.irods.org/irods-signing-key.asc | apt-key add - 
     ./python-requests_2.18.4-2ubuntu0.1_all.deb \
     ./libssl1.0.0_1.0.2n-1ubuntu5.7_amd64.deb && \
     apt install -y irods-icommands && \
-    apt-get clean && \
+    apt clean && \
     rm -rf /var/lib/apt/lists/*
 
 # Install Go
@@ -42,31 +42,31 @@ RUN wget -q -c https://dl.google.com/go/go1.17.6.linux-amd64.tar.gz -O - | sudo 
 ENV PATH=$PATH:/usr/local/go/bin 
 
 # Install Rust
-RUN apt-get update && \
-    apt-get install -y cargo rustc
+RUN apt update && \
+    apt install -y cargo rustc
 
 # Install CyberDuck CLI
 RUN echo -e "deb https://s3.amazonaws.com/repo.deb.cyberduck.io stable main" | tee /etc/apt/sources.list.d/cyberduck.list > /dev/null && \
-    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys FE7097963FEFBE72 && \
-    apt-get update && \
-    apt-get install duck
+    apt adv --keyserver keyserver.ubuntu.com --recv-keys FE7097963FEFBE72 && \
+    apt update && \
+    apt install duck
 
 # Install Github widget
 # RUN jupyter labextension install @jupyterlab/github
 
 # Install GitHub CLI
 RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/etc/apt/trusted.gpg.d/githubcli-archive-keyring.gpg && \
-    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/trusted.gpg.d/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" > /etc/apt/sources.list.d/github-cli.list &&
-    apt update &&
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/trusted.gpg.d/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" > /etc/apt/sources.list.d/github-cli.list && \
+    apt update && \
     apt install gh
 
 # Install and configure jupyter lab.
 COPY jupyter_notebook_config.json /opt/conda/etc/jupyter/jupyter_notebook_config.json
 
 # Add sudo to jovyan user
-RUN apt-get update && \
-    apt-get install -y sudo && \
-    apt-get clean && \
+RUN apt update && \
+    apt install -y sudo && \
+    apt clean && \
     rm -rf /var/lib/apt/lists/*
     
 ARG LOCAL_USER=jovyan
