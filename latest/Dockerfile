@@ -4,19 +4,7 @@ USER root
 
 # Install a few dependencies for iCommands, text editing, and monitoring instances
 RUN apt update && \
-    apt install -y lsb-release apt-transport-https curl gnupg2 libfuse2 gcc less nodejs software-properties-common apt-utils glances htop nano  && \
-    apt clean && \
-    rm -rf /var/lib/apt/lists/*
-
-RUN apt update && \
-    apt install -y vim-nox && \
-    apt clean && \
-    rm -rf /var/lib/apt/lists/*
-
-RUN apt update && \
-    apt install -y emacs-nox && \
-    apt clean && \
-    rm -rf /var/lib/apt/lists/*
+    apt install -y lsb-release apt-transport-https curl gnupg2 libfuse2 libfreetype6-dev pkg-config libx11-dev gcc less nodejs software-properties-common apt-utils glances htop nano 
 
 RUN wget -qO - https://packages.irods.org/irods-signing-key.asc | apt-key add - && \
     echo "deb [arch=amd64] https://packages.irods.org/apt/ bionic main" > /etc/apt/sources.list.d/renci-irods.list && \
@@ -24,18 +12,16 @@ RUN wget -qO - https://packages.irods.org/irods-signing-key.asc | apt-key add - 
     wget -q -c \
     http://security.ubuntu.com/ubuntu/pool/main/p/python-urllib3/python-urllib3_1.22-1ubuntu0.18.04.2_all.deb \
     http://security.ubuntu.com/ubuntu/pool/main/r/requests/python-requests_2.18.4-2ubuntu0.1_all.deb \
-    http://security.ubuntu.com/ubuntu/pool/main/o/openssl1.0/libssl1.0.0_1.0.2n-1ubuntu5.7_amd64.deb && \
+    http://security.ubuntu.com/ubuntu/pool/main/o/openssl1.0/libssl1.0.0_1.0.2n-1ubuntu5.8_amd64.deb && \
     apt install -y \
     ./python-urllib3_1.22-1ubuntu0.18.04.2_all.deb \
     ./python-requests_2.18.4-2ubuntu0.1_all.deb \
-    ./libssl1.0.0_1.0.2n-1ubuntu5.7_amd64.deb && \
+    ./libssl1.0.0_1.0.2n-1ubuntu5.8_amd64.deb && \
     rm -rf \
     ./python-urllib3_1.22-1ubuntu0.18.04.2_all.deb \
     ./python-requests_2.18.4-2ubuntu0.1_all.deb \
-    ./libssl1.0.0_1.0.2n-1ubuntu5.7_amd64.deb && \
-    apt install -y irods-icommands && \
-    apt clean && \
-    rm -rf /var/lib/apt/lists/*
+    ./libssl1.0.0_1.0.2n-1ubuntu5.8_amd64.deb && \
+    apt install -y irods-icommands 
 
 # Install Go
 RUN wget -q -c https://dl.google.com/go/go1.17.6.linux-amd64.tar.gz -O - | sudo tar -xz -C /usr/local
@@ -76,7 +62,7 @@ RUN usermod -aG sudo jovyan && \
     echo "$LOCAL_USER ALL=NOPASSWD: $PRIV_CMDS" >> /etc/sudoers
 
 # Add the jovyan user to UID 1000
-RUN groupadd jovyan && usermod -aG jovyan jovyan && usermod -d /home/jovyan -u 1000 jovyan
+# RUN groupadd jovyan && usermod -aG jovyan jovyan && usermod -d /home/jovyan -u 1000 -g 100 jovyan
 
 # Rebuild the Jupyter Lab with new tools
 RUN jupyter lab build
