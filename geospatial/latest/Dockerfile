@@ -27,15 +27,3 @@ RUN jupyter labextension install \
 RUN jupyter lab build
 
 RUN mamba clean --all -f -y
-
-USER root
-ARG conda_env=geospatial
-# create Python kernel and link it to jupyter
-RUN "${CONDA_DIR}/envs/${conda_env}/bin/python" -m ipykernel install --user --name="${conda_env}" && \
-    fix-permissions "${CONDA_DIR}" && \
-    fix-permissions "/home/${NB_USER}"
-USER jovyan
-
-COPY entry.sh /bin
-
-ENTRYPOINT ["bash", "/bin/entry.sh"]
