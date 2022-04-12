@@ -10,7 +10,6 @@ COPY environment.yml /home/jovyan/
 RUN mamba env create -f /home/jovyan/environment.yml
 RUN echo ". /opt/conda/etc/profile.d/conda.sh" >> /home/jovyan/.bashrc && \
     echo "conda activate geospatial" >> /home/jovyan/.bashrc 
-
 RUN source /home/jovyan/.bashrc
 
 # Install JupyterLab widget extensions
@@ -27,3 +26,4 @@ RUN jupyter labextension install \
 RUN jupyter lab build
 
 RUN mamba clean --all -f -y
+
