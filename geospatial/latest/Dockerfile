@@ -9,11 +9,8 @@ RUN conda config --set channel_priority strict
 COPY environment.yml /home/jovyan/ 
 RUN mamba env create -f /home/jovyan/environment.yml
 RUN echo ". /opt/conda/etc/profile.d/conda.sh" >> /home/jovyan/.bashrc && \
-    echo "conda activate geospatial" >> /home/jovyan/.bashrc 
-RUN source /home/jovyan/.bashrc
-
-# Create Kernel for Jupyter Notebooks
-RUN python -m ipykernel install --user --name geospatial --display-name "Python (geospatial)"
+    echo "conda activate geospatial" >> /home/jovyan/.bashrc && \
+    source /home/jovyan/.bashrc
 
 # Install JupyterLab widget extensions
 RUN pip install jupyterlab-geojson sidecar
@@ -28,6 +25,7 @@ RUN jupyter labextension install \
 
 RUN jupyter lab build
 
-# Install geospatial kernel into Jupyter   
-
 RUN conda clean --all -f -y
+
+# Install geospatial kernel into Jupyter
+RUN python -m ipykernel install --user --name=geospatial --display-name "Python (Geospatial)"
