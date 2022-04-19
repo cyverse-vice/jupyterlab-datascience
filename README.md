@@ -50,4 +50,4 @@ To build your own container with a Dockerfile and additional dependencies, pull 
 FROM harbor.cyverse.org/vice/jupyter/datascience:latest
 ```
 
-Follow the instructions in the [VICE manual for integrating your own tools and apps](https://cyverse-visual-interactive-computing-environment.readthedocs-hosted.com/en/latest/developer_guide/building.html).
+Follow the instructions in the [VICE manual for integrating your own tools and apps](https://learning.cyverse.org/vice/extend_apps/#building-an-app-for-your-tool).
