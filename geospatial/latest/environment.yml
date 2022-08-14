@@ -52,25 +52,24 @@ dependencies:
   - wxee 
   - xmovie
 # geospatial Conda Packages
-  - entwine
-  - geos
-  - gdal
-  - pdal
-  - proj 
+  - adlfs
   - cartopy
   - dask-geopandas
   - datashader
-  - fiona
-  - folium
-  - earthengine-api
-  - earthpy
   - easystac 
   - eemont
+  - earthengine-api
+  - earthpy
+  - entwine
   - eomaps
+  - fiona
+  - folium
+  - gdal 
   - geemap
   - gemgis
   - geoalchemy2
   - geopandas
+  - geos
   - geoviews
   - here-map-widget-for-jupyter
   - httplib2shim
@@ -93,9 +92,11 @@ dependencies:
   - owslib
   - panel
   - palettable
+  - pdal
   - pillow <=8.4.0 # required by sentinelhub 
   - planet
   - planetary-computer
+  - proj 
   - pydeck
   - pystac
   - python-mss
