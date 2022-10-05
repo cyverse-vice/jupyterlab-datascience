@@ -9,8 +9,9 @@ RUN conda config --set channel_priority strict
 COPY environment.yml /home/jovyan/ 
 RUN mamba env create -f /home/jovyan/environment.yml
 RUN echo ". /opt/conda/etc/profile.d/conda.sh" >> /home/jovyan/.bashrc && \
-    echo "conda activate earthlab" >> /home/jovyan/.bashrc
-RUN ipython kernel install --name "earthlab" --user     
+    echo "conda deactivate" >> /home/jovyan/.bashrc && \
+    echo "conda activate Earthlab" >> /home/jovyan/.bashrc
+RUN . /opt/conda/etc/profile.d/conda.sh && conda activate Earthlab && python -m ipykernel install --user --name Earthlab     
 RUN source /home/jovyan/.bashrc
 
 # Install JupyterLab widget extensions

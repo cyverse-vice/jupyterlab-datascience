@@ -1,4 +1,4 @@
-name: earthlab
+name: Earthlab
 channels:
   - conda-forge
   - defaults
@@ -44,7 +44,7 @@ dependencies:
   - nltk
   - textblob
 
-  # Jupyter Environment
+  # Jupyter Lab Environment & Kernel
   - papermill
   - autopep8
   - jupyterlab
@@ -54,6 +54,8 @@ dependencies:
   - nbclean
   - nbresuse
   - jupyterlab-geojson
+  - nb_conda_kernels
+  - ipykernel
   
   # Autograding
   - matplotcheck>=0.1.3
