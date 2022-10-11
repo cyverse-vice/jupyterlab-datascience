@@ -13,7 +13,29 @@ Jupyter Lab Datascience image built from the [Datascience Notebook](https://hub.
 | ------------ | 
 | <a href="https://de.cyverse.org/apps/de/cc77b788-bc45-11eb-9934-008cfa5ae621/launch" target="_blank"><img src="https://img.shields.io/badge/Datascience-latest-orange?style=plastic&logo=jupyter"></a> |
 
-# Instructions
+# Instructions for CyVerse Staff
+
+## Building
+
+1. Use either CodeSpaces or another clean DevEnvironment that you trust to clone the repository
+
+note: larger data science images (`geospatail`, `earthlab`, or ML type) are >5GB in size compressed and can be over 30GB uncompressed. Make sure to use a machine with enough RAM and Disk storage.
+
+2. Clone the repository
+
+3. Determine what version the current `latest` image is running, and prepare a new folder with that version of JupyterHub if it is no longer `latest`.
+
+4. Copy the old `latest` to the point released version
+
+5. Change directory to the `latest` and make any updates required for broken package dependencies
+
+6. Build the new image
+
+7. Test the new image by running it with a suitable sample notebook
+
+8. Check GitHub Action to make sure that it is using the latest featured builds 
+
+9. Push changes back to GitHub repository `main` branch and wait until GitHub Action completes.
 
 ## Run Docker locally or on a Virtual Machine
 
