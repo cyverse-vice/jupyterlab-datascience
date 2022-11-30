@@ -12,44 +12,50 @@ Jupyter Lab Datascience image built from the [Datascience Notebook](https://hub.
 | quick launch | 
 | ------------ | 
 | <a href="https://de.cyverse.org/apps/de/cc77b788-bc45-11eb-9934-008cfa5ae621/launch" target="_blank"><img src="https://img.shields.io/badge/Datascience-latest-orange?style=plastic&logo=jupyter"></a> |
+| <a href="https://de.cyverse.org/apps/de/0bb01716-5d03-11ec-b195-008cfa5ae621/launch" target="_blank"><img src="https://img.shields.io/badge/Geospatial-latest-orange?style=plastic&logo=jupyter"></a> |
+| <a href="https://de.cyverse.org/apps/de/faf1d268-44cc-11ed-9715-008cfa5ae621/launch" target="_blank"><img src="https://img.shields.io/badge/Earthlab-latest-orange?style=plastic&logo=jupyter"></a> |
+| <a href="https://de.cyverse.org/apps/de/c2227314-1995-11ed-986c-008cfa5ae621/launch" target="_blank"><img src="https://img.shields.io/badge/RStudio-latest-orange?style=plastic&logo=r"></a> |
 
-# Instructions for CyVerse Staff
+## Development
 
-## Building
+1. Use either CodeSpaces or another clean Dev Environment that you trust to clone the repository
 
-1. Use either CodeSpaces or another clean DevEnvironment that you trust to clone the repository
+**note**: The larger datascience images (e.g., `geospatial`, `earthlab`, or ML types with CUDA, Tensorflow or Pytorch) are all >5GB in size when compressed and can be over 30GB when uncompressed. Make sure to use a VM with enough RAM and Disk storage (suggest >8 cores, >16 GB RAM, >60 GB disk).
 
-note: larger data science images (`geospatail`, `earthlab`, or ML type) are >5GB in size compressed and can be over 30GB uncompressed. Make sure to use a machine with enough RAM and Disk storage.
+2. Clone this repository
 
-2. Clone the repository
+```
+git clone https://github.com/cyverse-vice/jupyterlab-datascience
+```
 
 3. Determine what version the current `latest` image is running, and prepare a new folder with that version of JupyterHub if it is no longer `latest`.
 
-4. Copy the old `latest` to the point released version
+Visit the [Jupyter Docker Stacks](https://jupyter-docker-stacks.readthedocs.io/en/latest/) pages
 
-5. Change directory to the `latest` and make any updates required for broken package dependencies
+4. Rename the previous `latest` as its point release version number
 
-6. Build the new image
+5. Create a copy of the directory `latest` and make any updates required for broken package dependencies
+
+6. Build the new image using the `latest` tag name
 
 7. Test the new image by running it with a suitable sample notebook
 
-8. Check GitHub Action to make sure that it is using the latest featured builds 
+8. Check the GitHub Action to make sure it is using the `latest` featured build successfully 
 
 9. Push changes back to GitHub repository `main` branch and wait until GitHub Action completes.
 
-## Run Docker locally or on a Virtual Machine
+## Running Docker locally or on a Virtual Machine
 
 To run the JupyterLab, you must first `pull` from DockerHub, or activate a [CyVerse Account](https://user.cyverse.org/services/mine) and launch in the Discovery Environment VICE.
 
 The container for running JupyterLab is hosted on DockerHub and can be started locally:
-
 
 ```
 docker pull harbor.cyverse.org/vice/jupyter/datascience:latest
 ```
 
 ```
-docker run -it --rm -d harbor.cyverse.org/vice/jupyter/datascience:latest
+docker run -it --rm -p 8888:8888 harbor.cyverse.org/vice/jupyter/datascience:latest
 ```
 
 ## Run Docker container in CyVerse VICE
@@ -63,7 +69,7 @@ You can build a new Docker container with additional dependencies from this Dock
 To test the container locally:
 
 ```
-docker run -it --rm -v /$HOME:/work --workdir /work -p 8888:8888 -e REDIRECT_URL=http://localhost:8888 harbor.cyverse.org/vice/jupyter/datascience:latest
+docker run -it --rm -p 8888:8888 -e REDIRECT_URL=http://localhost:8888 harbor.cyverse.org/vice/jupyter/datascience:latest
 ```
 
 To build your own container with a Dockerfile and additional dependencies, pull the pre-built image from DockerHub:
