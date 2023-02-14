@@ -11,8 +11,9 @@ RUN wget -q -c https://dl.google.com/go/go1.18.4.linux-amd64.tar.gz -O - | sudo 
 ENV PATH=$PATH:/usr/local/go/bin 
 
 # Install GoCommands
-RUN cd /opt && curl -L -o gocmd.tar.gz https://github.com/cyverse/gocommands/releases/download/v0.4.3/gocmd-v0.4.3-linux-amd64.tar.gz && \
-tar zxvf gocmd.tar.gz && rm gocmd.tar.gz 
+RUN mkdir /opt/gocommands/ && cd /opt/gocommands && curl -L -o gocmd.tar.gz https://github.com/cyverse/gocommands/releases/download/v0.4.3/gocmd-v0.4.3-linux-amd64.tar.gz && \
+tar zxvf gocmd.tar.gz && rm gocmd.tar.gz
+ENV PATH=$PATH:/opt/gocommands
 
 # Install and configure jupyter lab.
 COPY jupyter_notebook_config.json /opt/conda/etc/jupyter/jupyter_notebook_config.json
@@ -24,7 +25,7 @@ RUN apt update && \
     rm -rf /var/lib/apt/lists/*
     
 ARG LOCAL_USER=jovyan
-ARG PRIV_CMDS='/bin/ch*,/bin/cat,/bin/gunzip,/bin/tar,/bin/mkdir,/bin/ps,/bin/mv,/bin/cp,/usr/bin/apt*,/usr/bin/pip*,/bin/yum'
+ARG PRIV_CMDS='/bin/ch*,/bin/cat,/bin/gunzip,/bin/tar,/bin/mkdir,/bin/ps,/bin/mv,/bin/cp,/usr/bin/apt*,/usr/bin/pip*,/bin/yum',/opt
 
 RUN usermod -aG sudo jovyan && \
     echo "$LOCAL_USER ALL=NOPASSWD: $PRIV_CMDS" >> /etc/sudoers

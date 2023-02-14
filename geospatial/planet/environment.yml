@@ -1,0 +1,22 @@
+name: planet
+channels:
+  - conda-forge
+dependencies:
+  - bokeh
+  - folium
+  - gdal
+  - geemap
+  - geojson
+  - geopy
+  - mapboxgl
+  - matplotlib
+  - netcdf4
+  - numpy
+  - opencv
+  - proj
+  - planet==1.5.2
+  - xarray
+  - rioxarray
+  - requests
+  - scikit-image
+  - scipy
