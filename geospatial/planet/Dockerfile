@@ -11,7 +11,7 @@ RUN mamba env create -f /home/jovyan/environment.yml
 # using ~/.bash_profile instead of ~/.bashrc for non-interactive tty (-it) containers
 RUN echo ". /opt/conda/etc/profile.d/conda.sh" >> /home/jovyan/.bash_profile && \
     echo "conda activate planet" >> /home/jovyan/.bash_profile
-RUN ipython kernel install --name "planet" --user     
+RUN . /opt/conda/etc/profile.d/conda.sh && conda deactivate && conda activate planet && ipython kernel install --name "planet" --user 
 RUN source /home/jovyan/.bash_profile
 
 # Install JupyterLab widget extensions
