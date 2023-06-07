@@ -79,3 +79,5 @@ FROM harbor.cyverse.org/vice/jupyter/datascience:latest
 ```
 
 Follow the instructions in the [VICE manual for integrating your own tools and apps](https://learning.cyverse.org/vice/extend_apps/#building-an-app-for-your-tool).
+
+---
