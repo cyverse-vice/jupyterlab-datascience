@@ -1,4 +1,4 @@
-FROM jupyter/datascience-notebook:lab-3.6.1
+FROM jupyter/datascience-notebook:lab-4.0.1
 
 USER root
 
@@ -7,13 +7,14 @@ RUN apt update && \
     apt install -y lsb-release apt-transport-https curl libfreetype6-dev pkg-config libx11-dev gcc less software-properties-common apt-utils glances htop nano 
 
 # Install Go
-RUN wget -q -c https://dl.google.com/go/go1.18.4.linux-amd64.tar.gz -O - | sudo tar -xz -C /usr/local
+# Install Go
+RUN wget -q -c https://dl.google.com/go/go1.20.5.linux-amd64.tar.gz -O - | tar -xz -C /usr/local
 ENV PATH=$PATH:/usr/local/go/bin 
 
 # Install GoCommands
-RUN mkdir /opt/gocommands/ && cd /opt/gocommands && curl -L -o gocmd.tar.gz https://github.com/cyverse/gocommands/releases/download/v0.4.3/gocmd-v0.4.3-linux-amd64.tar.gz && \
-tar zxvf gocmd.tar.gz && rm gocmd.tar.gz
-ENV PATH=$PATH:/opt/gocommands
+RUN cd /usr/local/bin/ && \
+    GOCMD_VER=$(curl -L -s https://raw.githubusercontent.com/cyverse/gocommands/main/VERSION.txt); \
+    curl -L -s https://github.com/cyverse/gocommands/releases/download/${GOCMD_VER}/gocmd-${GOCMD_VER}-linux-amd64.tar.gz | tar zxvf -
 
 # Install and configure jupyter lab.
 COPY jupyter_notebook_config.json /opt/conda/etc/jupyter/jupyter_notebook_config.json
@@ -25,7 +26,7 @@ RUN apt update && \
     rm -rf /var/lib/apt/lists/*
     
 ARG LOCAL_USER=jovyan
-ARG PRIV_CMDS='/bin/ch*,/bin/cat,/bin/gunzip,/bin/tar,/bin/mkdir,/bin/ps,/bin/mv,/bin/cp,/usr/bin/apt*,/usr/bin/pip*,/bin/yum',/opt
+ARG PRIV_CMDS='/bin/ch*,/bin/cat,/bin/gunzip,/bin/tar,/bin/mkdir,/bin/ps,/bin/mv,/bin/cp,/usr/bin/apt*,/usr/bin/pip*,/bin/yum,/bin/snap,/bin/curl,/bin/tee,/opt'
 
 RUN usermod -aG sudo jovyan && \
     echo "$LOCAL_USER ALL=NOPASSWD: $PRIV_CMDS" >> /etc/sudoers
@@ -34,9 +35,9 @@ RUN usermod -aG jovyan jovyan
 
 # Install RStudio
 RUN apt update && apt install --yes gdebi-core && \
-    wget https://download2.rstudio.org/server/jammy/amd64/rstudio-server-2022.12.0-353-amd64.deb && \
-    gdebi -n rstudio-server-2022.12.0-353-amd64.deb && \
-    rm rstudio-server-2022.12.0-353-amd64.deb && \
+    wget https://download2.rstudio.org/server/jammy/amd64/rstudio-server-2023.06.0-421-amd64.deb && \
+    gdebi -n rstudio-server-2023.06.0-421-amd64.deb && \
+    rm rstudio-server-2023.06.0-421-amd64.deb && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install Shiny Server
