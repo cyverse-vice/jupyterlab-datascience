@@ -1,0 +1,6 @@
+# https://planet-sdk-for-python-v2.readthedocs.io/en/latest/get-started/quick-start-guide/
+name: planet
+channels:
+  - conda-forge
+dependencies:
+  - planet==2.0.2

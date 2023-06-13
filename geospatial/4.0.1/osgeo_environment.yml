@@ -1,0 +1,22 @@
+name: osgeo
+channels:
+  - conda-forge
+dependencies:
+  - altair
+  - bokeh
+  - cmake
+  - eigen
+  - gdal
+  - ipykernel
+  - jupyterlab-geojson
+  - laszip
+  - libxml2
+  - matplotlib
+  - nb_conda_kernels
+  - numpy
+  - pandas
+  - pdal
+  - python-pdal
+  - pip
+  - python==3.9.7
+  - seaborn
