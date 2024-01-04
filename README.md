@@ -13,7 +13,6 @@ Jupyter Lab Datascience image built from the [Datascience Notebook](https://hub.
 | ------------ | 
 | <a href="https://de.cyverse.org/apps/de/cc77b788-bc45-11eb-9934-008cfa5ae621/launch" target="_blank"><img src="https://img.shields.io/badge/Datascience-latest-orange?style=plastic&logo=jupyter"></a> |
 | <a href="https://de.cyverse.org/apps/de/0bb01716-5d03-11ec-b195-008cfa5ae621/launch" target="_blank"><img src="https://img.shields.io/badge/Geospatial-latest-orange?style=plastic&logo=jupyter"></a> |
-| <a href="https://de.cyverse.org/apps/de/faf1d268-44cc-11ed-9715-008cfa5ae621/launch" target="_blank"><img src="https://img.shields.io/badge/Earthlab-latest-orange?style=plastic&logo=jupyter"></a> |
 | <a href="https://de.cyverse.org/apps/de/c2227314-1995-11ed-986c-008cfa5ae621/launch" target="_blank"><img src="https://img.shields.io/badge/RStudio-latest-orange?style=plastic&logo=r"></a> |
 
 ## Development
