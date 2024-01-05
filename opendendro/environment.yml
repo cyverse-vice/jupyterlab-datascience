@@ -1,0 +1,18 @@
+name: dplpy
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - bs4
+  - pandas
+  - matplotlib
+  - wget
+  - statsmodels
+  - numpy
+  - scipy
+  - ipykernel
+  - pip
+  - pip:
+    - csaps
+    - pytest
+    - dplpy

@@ -37,10 +37,13 @@ RUN R -e "install.packages(c('devtools', 'roxygen2', 'testthat', 'usethis'), \
 RUN R -e "install.packages(c('dplR'), \
     repos='http://cran.rstudio.com/', version='4.2.3')"
 
+# Install Python reticulate (for dplPy to run in R)
+RUN R -e "install.packages(c('reticulate'), \
+    repos='http://cran.rstudio.com/', version='4.2.3')"
+
 # Install dplPy & create Jupyter kernel 
-RUN git clone --branch 0.1.x --depth 1 https://github.com/OpenDendro/dplPy.git && \
-    cd dplPy && \   
-    mamba env create -f environment.yml 
+COPY environment.yml /home/jovyan/environment.yml
+RUN cd && mamba env create -f environment.yml 
 # using ~/.bash_profile instead of ~/.bashrc for non-interactive tty (-it) containers
 RUN echo ". /opt/conda/etc/profile.d/conda.sh" >> /home/jovyan/.bash_profile && \
     echo "conda deactivate" >> /home/jovyan/.bash_profile && \
