@@ -52,7 +52,7 @@ USER jovyan
 WORKDIR /home/jovyan
 
 # Install Jupyter Lab Proxy extensions (cards in Launcher)
-RUN mamba install --quiet --yes jupyter-rsession-proxy jupyter-server-proxy && \
+RUN mamba install --quiet --yes jupyter-rsession-proxy jupyter-server-proxy gh && \
     pip install jupyter-shiny-proxy
     
 # Install and configure jupyter lab. 
