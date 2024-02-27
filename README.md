@@ -3,6 +3,8 @@
 
 # jupyterlab-datascience
 
+:exclamation: **Developer note:** As mentioned in [the official Jupyter image stack repository, newer images are pushed to quay.io](https://github.com/jupyter/docker-stacks?tab=readme-ov-file#quick-start). Please pull from `quay.io/jupyter/datascience-notebook` when developing new Tools and Apps.
+
 [Project Jupyter](https://jupyter.org/) Datascience Notebook with a few added packages for use in [CyVerse Discovery Environment](https://de.cyverse.org)
 
 Jupyter Lab Datascience image built from the [Datascience Notebook](https://hub.docker.com/r/jupyter/datascience-notebook) for [CyVerse VICE](https://cyverse-visual-interactive-computing-environment.readthedocs-hosted.com/en/latest/index.html). Project Jupyter's base image requires a couple additional configuration files for it be compatible with CyVerse Kubernetes orchestration and iRODS data store.
