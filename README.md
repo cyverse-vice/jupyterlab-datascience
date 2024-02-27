@@ -3,7 +3,11 @@
 
 # jupyterlab-datascience
 
-:exclamation: **Developer note:** As mentioned in [the official Jupyter image stack repository, newer images are pushed to quay.io](https://github.com/jupyter/docker-stacks?tab=readme-ov-file#quick-start). Please pull from `quay.io/jupyter/datascience-notebook` when developing new Tools and Apps.
+---
+
+:exclamation: **Developer note:** As mentioned in [the official Jupyter image stack repository, newer images are pushed to quay.io](https://github.com/jupyter/docker-stacks?tab=readme-ov-file#quick-start). Please pull from `quay.io/jupyter/datascience-notebook` when developing new Tools and Apps. :exclamation:
+
+---
 
 [Project Jupyter](https://jupyter.org/) Datascience Notebook with a few added packages for use in [CyVerse Discovery Environment](https://de.cyverse.org)
 
