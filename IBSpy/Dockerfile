@@ -32,15 +32,6 @@ RUN usermod -aG sudo jovyan && \
 RUN addgroup jovyan
 RUN usermod -aG jovyan jovyan
 
-# Install IBSpy (https://github.com/Uauy-Lab/IBSpy)
-RUN pip3 install cython biopython pyfaidx IBSpy
-
-# Obtaining KMC 3.2.4
-RUN wget https://github.com/refresh-bio/KMC/releases/download/v3.2.4/KMC3.2.4.linux.x64.tar.gz && \
-    tar -xvf KMC3.2.4.linux.x64.tar.gz && \
-    mv bin /home/jovyan/KMC3.2.4/bin && \
-    rm MC3.2.4.linux.x64.tar.gz
-
 # Install RStudio
 RUN apt update && apt install --yes gdebi-core && \
     wget https://download2.rstudio.org/server/jammy/amd64/rstudio-server-2023.12.0-369-amd64.deb && \
@@ -59,6 +50,21 @@ COPY jupyter_notebook_config.py /etc/jupyter/
 
 USER jovyan
 WORKDIR /home/jovyan
+
+# Install IBSpy (https://github.com/Uauy-Lab/IBSpy)
+#RUN pip install Cython biopython pyfaidx IBSpy
+RUN pip install --use-pep517 cython biopython pyfaidx pyranges multiprocess pysam
+RUN git clone https://github.com/Uauy-Lab/IBSpy.git && \
+    cd IBSpy && \
+    python setup.py develop && \
+    export PATH=$PATH:~/IBspy/
+
+# Obtaining KMC 3.2.4
+RUN wget https://github.com/refresh-bio/KMC/releases/download/v3.2.4/KMC3.2.4.linux.x64.tar.gz && \
+    tar -xvf KMC3.2.4.linux.x64.tar.gz && \
+    mkdir /home/jovyan/KMC3.2.4/ && \
+    mv bin include /home/jovyan/KMC3.2.4/ && \
+    rm KMC3.2.4.linux.x64.tar.gz
 
 # Install Jupyter Lab Proxy extensions (cards in Launcher)
 RUN mamba install --quiet --yes jupyter-rsession-proxy jupyter-server-proxy gh && \
