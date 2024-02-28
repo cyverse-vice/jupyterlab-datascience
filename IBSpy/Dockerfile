@@ -2,9 +2,9 @@ FROM quay.io/jupyter/datascience-notebook:latest
 
 USER root
 
-# Install a few dependencies for goCommands, text editing, and monitoring instances
+# Install a few dependencies for goCommands, text editing, jellyfish and monitoring instances
 RUN apt update && \
-    apt install -y lsb-release apt-transport-https curl libfreetype6-dev pkg-config libx11-dev gcc less software-properties-common apt-utils glances htop nano 
+    apt install -y lsb-release apt-transport-https curl libfreetype6-dev pkg-config libx11-dev gcc less software-properties-common apt-utils glances htop nano jellyfish
 
 # Install Go
 RUN wget -q -c https://dl.google.com/go/go1.21.5.linux-amd64.tar.gz -O - | tar -xz -C /usr/local
@@ -62,9 +62,18 @@ RUN git clone https://github.com/Uauy-Lab/IBSpy.git && \
 # Obtaining KMC 3.2.4
 RUN wget https://github.com/refresh-bio/KMC/releases/download/v3.2.4/KMC3.2.4.linux.x64.tar.gz && \
     tar -xvf KMC3.2.4.linux.x64.tar.gz && \
-    mkdir /home/jovyan/KMC3.2.4/ && \
-    mv bin include /home/jovyan/KMC3.2.4/ && \
-    rm KMC3.2.4.linux.x64.tar.gz
+    mkdir /home/jovyan/KMC_3.2.4/ && \
+    mv bin include /home/jovyan/KMC_3.2.4/ && \
+    rm KMC3.2.4.linux.x64.tar.gz && \
+    export PATH=$PATH:~/KMC_3.2.4/bin && export PATH=$PATH:~/KMC_3.2.4/include
+
+# Obtaining kmersGWAS
+RUN wget https://github.com/voichek/kmersGWAS/releases/download/v0.3-beta/v0_3_beta.zip && \
+    unzip v0_3_beta.zip -d kmersGWAS_0.3&& \
+    rm v0_3_beta.zip
+
+# Install requirements for kmerGWAS
+RUN R -e "install.packages(c('ggplot2', 'dplyr', 'tidyr', 'MASS', 'mvnpermute', 'matrixcalc'), repos = 'http://cran.us.r-project.org')"
 
 # Install Jupyter Lab Proxy extensions (cards in Launcher)
 RUN mamba install --quiet --yes jupyter-rsession-proxy jupyter-server-proxy gh && \
