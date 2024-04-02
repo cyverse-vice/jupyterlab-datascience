@@ -55,6 +55,9 @@ RUN mamba install --quiet --yes jupyter-rsession-proxy jupyter-server-proxy && \
 # Install and configure jupyter lab. 
 COPY jupyter_notebook_config.json /opt/conda/etc/jupyter/jupyter_notebook_config.json
 
+# Install Jupyter-AI https://jupyter-ai.readthedocs.io/en/latest/users/index.html#installation
+RUN pip install jupyter-ai 
+
 # Rebuild the Jupyter Lab with new tools
 RUN jupyter lab build
 
