@@ -50,7 +50,7 @@ jobs:
         uses: docker/build-push-action@v3 # Assuming this is the latest version
         with:
           context: . # Adjust if your Dockerfile is in a different directory
-          file: Dockerfile # Adjust if your Dockerfile has a different name or path
+          file: 4.1.5/Dockerfile # Adjust if your Dockerfile has a different name or path
           builder: ${{ steps.buildx.outputs.name }}
           push: true
           tags: harbor.cyverse.org/vice/jupyter/datascience:4.1.5 # Adjust based on your repository and naming conventions
