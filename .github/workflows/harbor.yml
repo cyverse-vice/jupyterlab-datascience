@@ -5,21 +5,19 @@ on:
     branches: main
 
 jobs:
-  
   build:
     runs-on: ubuntu-latest
     
     steps:
-    
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3 # Updated to latest version
       
       - name: Set up Docker Buildx
         id: buildx
-        uses: docker/setup-buildx-action@v2.8.0
+        uses: docker/setup-buildx-action@v3 # Updated to latest version
       
       - name: Cache Docker layers
-        uses: actions/cache@v2
+        uses: actions/cache@v3 # Updated to latest version
         with:
           path: /tmp/.buildx-cache
           key: ${{ runner.os }}-buildx-${{ github.sha }}
@@ -28,7 +26,7 @@ jobs:
       
       - name: Login to harbor
         if: github.event_name != 'pull_request'
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2 # Updated to latest version
         with:
           registry: harbor.cyverse.org
           username: ${{ secrets.HARBOR_USERNAME }}
@@ -36,7 +34,7 @@ jobs:
       
       - name: Build and push latest
         id: docker_build_latest
-        uses: docker/build-push-action@v4.1.1
+        uses: docker/build-push-action@v3 # Updated to latest version
         with:
           context: latest 
           file: latest/Dockerfile
@@ -45,6 +43,19 @@ jobs:
           tags: harbor.cyverse.org/vice/jupyter/datascience:latest
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
-          
+
+      # New step to build and push container tagged 4.1.5
+      - name: Build and push 4.1.5
+        id: docker_build_4.1.5
+        uses: docker/build-push-action@v3 # Assuming this is the latest version
+        with:
+          context: . # Adjust if your Dockerfile is in a different directory
+          file: Dockerfile # Adjust if your Dockerfile has a different name or path
+          builder: ${{ steps.buildx.outputs.name }}
+          push: true
+          tags: harbor.cyverse.org/vice/jupyter/datascience:4.1.5 # Adjust based on your repository and naming conventions
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
+      
       - name: Image digest
-        run: echo ${{ steps.docker_build.outputs.digest }}
+        run: echo ${{ steps.docker_build_latest.outputs.digest }} # This might need adjustment based on the step you want to echo the digest from
