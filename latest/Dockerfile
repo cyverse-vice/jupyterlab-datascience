@@ -45,6 +45,8 @@ RUN wget https://download3.rstudio.org/ubuntu-18.04/x86_64/shiny-server-1.5.21.1
     rm shiny-server-1.5.21.1012-amd64.deb && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
+RUN apt-get update && apt-get upgrade -y
+
 # Trying a fix for RStudio proxy URI problem in VICE
 COPY jupyter_notebook_config.py /etc/jupyter/
 
