@@ -8,4 +8,7 @@ if [ -f /data-store/iplant/home/$IPLANT_USER/.gitconfig ]; then
   cp /data-store/iplant/home/$IPLANT_USER/.gitconfig ~/
 fi
 
-exec jupyter lab --no-browser --LabApp.token="" --LabApp.password=""
+# Start Nginx in the background
+service nginx start & 
+
+exec jupyter lab --no-browser --LabApp.token="" --LabApp.password="" --ip="0.0.0.0" --port=8888

@@ -54,32 +54,45 @@ RUN dpkg -i gcm-linux_amd64.2.5.0.deb && \
 # set the ENV for the credential type
 ENV GCM_CREDENTIAL_STORE=cache
 
-# Copy in configuration JSON for Jupyter Notebooks
-COPY jupyter_notebook_config.json /opt/conda/etc/jupyter/jupyter_notebook_config.json
-
-# Trying to fix URI problem with localhost for /rstudio proxy from Jupyter
-RUN echo "www-address=https://${HOSTNAME}.cyverse.run" >> /etc/rstudio/rserver.conf
+# trying to install nginx to handle proxying
+RUN apt update && apt install -y nginx
 
 USER jovyan
 WORKDIR /home/jovyan
 
+# Install VS Code Server
+RUN curl -fsSL https://code-server.dev/install.sh | sh && \
+    python3 -m pip install jupyter-vscode-proxy
+
+## Install Jupyter Lab RStudio extensions (cards in Launcher)
+RUN python3 -m pip install git+https://github.com/jupyterhub/jupyter-rsession-proxy@216d9e5e65f0a16af34cf1bafc418c4daa1e08d6 jupyter-shiny-proxy
+
+# Install Jupyter-AI https://jupyter-ai.readthedocs.io/en/latest/users/index.html#installation
+RUN python3 -m pip install jupyter-ai && \ 
+    python3 -m pip install langchain_anthropic langchain_openai langchain_nvidia_ai_endpoints langchain_google_genai
+
 # Install Jupyter Lab Proxy extensions (cards in Launcher)
-RUN mamba install --quiet --yes jupyter-rsession-proxy jupyter-server-proxy gh && \
-    pip install jupyter-shiny-proxy
+RUN mamba install -c conda-forge jupyter-server-proxy 
     
 # Install and configure jupyter lab. 
 COPY jupyter_notebook_config.json /opt/conda/etc/jupyter/jupyter_notebook_config.json
-
-# Install Jupyter-AI https://jupyter-ai.readthedocs.io/en/latest/users/index.html#installation
-RUN pip install jupyter-ai 
 
 # Rebuild the Jupyter Lab with new tools
 RUN jupyter lab build
 
 EXPOSE 8888
 
+# Copy in configuration JSON for Jupyter Notebooks
+#COPY jupyter_notebook_config.json /opt/conda/etc/jupyter/jupyter_notebook_config.json
+
+# Set the entrypoint script
 COPY entry.sh /bin
+
+# Copy your Nginx configuration
+COPY nginx.conf /etc/nginx/conf.d/default.conf 
 
 RUN mkdir -p /home/jovyan/.irods
 
 ENTRYPOINT ["bash", "/bin/entry.sh"]
+
+
