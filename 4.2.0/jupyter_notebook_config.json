@@ -1,0 +1,11 @@
+{
+  "ServerApp": {
+    "allow_origin": "*",
+    "trust_xheaders": true,
+    "token": "",
+    "password": "",
+    "jpserver_extensions": {
+      "jupyterlab": true
+    }
+  }
+}

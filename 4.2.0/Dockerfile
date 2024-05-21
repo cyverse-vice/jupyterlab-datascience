@@ -1,0 +1,98 @@
+FROM quay.io/jupyter/datascience-notebook:latest
+
+USER root
+
+# Install a few dependencies for goCommands, text editing, and monitoring instances
+RUN apt update && \
+    apt install -y lsb-release apt-transport-https curl libfreetype6-dev pkg-config libx11-dev gcc gettext less software-properties-common apt-utils glances htop nano 
+
+# Install GoLang https://go.dev/dl/ 
+RUN wget -q -c https://dl.google.com/go/go1.22.3.linux-amd64.tar.gz -O - | tar -xz -C /usr/local
+ENV PATH=$PATH:/usr/local/go/bin 
+
+# Install GoCommands https://learning.cyverse.org/ds/gocommands/ 
+RUN cd /usr/local/bin/ && \
+    GOCMD_VER=$(curl -L -s https://raw.githubusercontent.com/cyverse/gocommands/main/VERSION.txt); \
+    curl -L -s https://github.com/cyverse/gocommands/releases/download/${GOCMD_VER}/gocmd-${GOCMD_VER}-linux-amd64.tar.gz | tar zxvf -
+
+# Add sudo to jovyan user
+RUN apt update && \
+    apt install -y sudo && \
+    apt clean && \
+    rm -rf /var/lib/apt/lists/*
+    
+ARG LOCAL_USER=jovyan
+
+# all sudo powers
+ARG PRIV_CMDS='ALL'
+# uncomment to limited sudo powers
+# ARG PRIV_CMDS='/bin/ch*,/bin/cat,/bin/gunzip,/bin/tar,/bin/mkdir,/bin/ps,/bin/mv,/bin/cp,/usr/bin/apt*,/usr/bin/pip*,/bin/yum,/bin/snap,/bin/curl,/bin/tee,/opt'
+
+RUN usermod -aG sudo jovyan && \
+    echo "$LOCAL_USER ALL=NOPASSWD: $PRIV_CMDS" >> /etc/sudoers
+RUN addgroup jovyan
+RUN usermod -aG jovyan jovyan
+
+# Install RStudio
+RUN apt update && apt install --yes gdebi-core && \
+    wget https://download2.rstudio.org/server/jammy/amd64/rstudio-server-2024.04.1-748-amd64.deb && \
+    gdebi -n rstudio-server-2024.04.1-748-amd64.deb && \
+    rm rstudio-server-2024.04.1-748-amd64.deb && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Install Shiny Server
+RUN wget https://download3.rstudio.org/ubuntu-18.04/x86_64/shiny-server-1.5.22.1017-amd64.deb && \
+    gdebi -n shiny-server-1.5.22.1017-amd64.deb && \
+    rm shiny-server-1.5.22.1017-amd64.deb && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# install git-credential-manager 
+RUN wget https://github.com/git-ecosystem/git-credential-manager/releases/download/v2.5.0/gcm-linux_amd64.2.5.0.deb
+RUN dpkg -i gcm-linux_amd64.2.5.0.deb && \
+    rm gcm-linux_amd64.2.5.0.deb
+
+# set the ENV for the credential type
+ENV GCM_CREDENTIAL_STORE=cache
+
+# trying to install nginx to handle proxying
+RUN apt update && apt install -y nginx
+
+USER jovyan
+WORKDIR /home/jovyan
+
+# Install VS Code Server
+RUN curl -fsSL https://code-server.dev/install.sh | sh && \
+    python3 -m pip install jupyter-vscode-proxy
+
+## Install Jupyter Lab RStudio extensions (cards in Launcher)
+RUN python3 -m pip install git+https://github.com/jupyterhub/jupyter-rsession-proxy@216d9e5e65f0a16af34cf1bafc418c4daa1e08d6 jupyter-shiny-proxy
+
+# Install Jupyter-AI https://jupyter-ai.readthedocs.io/en/latest/users/index.html#installation
+RUN python3 -m pip install jupyter-ai && \ 
+    python3 -m pip install langchain_anthropic langchain_openai langchain_nvidia_ai_endpoints langchain_google_genai
+
+# Install Jupyter Lab Proxy extensions (cards in Launcher)
+RUN mamba install -c conda-forge jupyter-server-proxy 
+    
+# Install and configure jupyter lab. 
+COPY jupyter_notebook_config.json /opt/conda/etc/jupyter/jupyter_notebook_config.json
+
+# Rebuild the Jupyter Lab with new tools
+RUN jupyter lab build
+
+EXPOSE 8888
+
+# Copy in configuration JSON for Jupyter Notebooks
+#COPY jupyter_notebook_config.json /opt/conda/etc/jupyter/jupyter_notebook_config.json
+
+# Set the entrypoint script
+COPY entry.sh /bin
+
+# Copy your Nginx configuration
+COPY nginx.conf /etc/nginx/conf.d/default.conf 
+
+RUN mkdir -p /home/jovyan/.irods
+
+ENTRYPOINT ["bash", "/bin/entry.sh"]
+
+
