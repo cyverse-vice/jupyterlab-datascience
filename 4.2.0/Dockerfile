@@ -1,3 +1,4 @@
+# https://quay.io/repository/jupyter/datascience-notebook
 FROM quay.io/jupyter/datascience-notebook:latest
 
 USER root
@@ -5,10 +6,6 @@ USER root
 # Install a few dependencies for goCommands, text editing, and monitoring instances
 RUN apt update && \
     apt install -y lsb-release apt-transport-https curl libfreetype6-dev pkg-config libx11-dev gcc gettext less software-properties-common apt-utils glances htop nano 
-
-# Install GoLang https://go.dev/dl/ 
-RUN wget -q -c https://dl.google.com/go/go1.22.3.linux-amd64.tar.gz -O - | tar -xz -C /usr/local
-ENV PATH=$PATH:/usr/local/go/bin 
 
 # Install GoCommands https://learning.cyverse.org/ds/gocommands/ 
 RUN cd /usr/local/bin/ && \
@@ -27,7 +24,7 @@ ARG LOCAL_USER=jovyan
 ARG PRIV_CMDS='ALL'
 # uncomment to limited sudo powers
 # ARG PRIV_CMDS='/bin/ch*,/bin/cat,/bin/gunzip,/bin/tar,/bin/mkdir,/bin/ps,/bin/mv,/bin/cp,/usr/bin/apt*,/usr/bin/pip*,/bin/yum,/bin/snap,/bin/curl,/bin/tee,/opt'
-
+    
 RUN usermod -aG sudo jovyan && \
     echo "$LOCAL_USER ALL=NOPASSWD: $PRIV_CMDS" >> /etc/sudoers
 RUN addgroup jovyan
@@ -54,9 +51,6 @@ RUN dpkg -i gcm-linux_amd64.2.5.0.deb && \
 # set the ENV for the credential type
 ENV GCM_CREDENTIAL_STORE=cache
 
-# trying to install nginx to handle proxying
-RUN apt update && apt install -y nginx
-
 USER jovyan
 WORKDIR /home/jovyan
 
@@ -73,8 +67,8 @@ RUN python3 -m pip install jupyter-ai && \
 
 # Install Jupyter Lab Proxy extensions (cards in Launcher)
 RUN mamba install -c conda-forge jupyter-server-proxy 
-    
-# Install and configure jupyter lab. 
+  
+# Copy in configuration JSON for Jupyter Notebooks
 COPY jupyter_notebook_config.json /opt/conda/etc/jupyter/jupyter_notebook_config.json
 
 # Rebuild the Jupyter Lab with new tools
@@ -82,16 +76,8 @@ RUN jupyter lab build
 
 EXPOSE 8888
 
-# Copy in configuration JSON for Jupyter Notebooks
-#COPY jupyter_notebook_config.json /opt/conda/etc/jupyter/jupyter_notebook_config.json
-
 # Set the entrypoint script
 COPY entry.sh /bin
-
-# Copy your Nginx configuration
-COPY nginx.conf /etc/nginx/conf.d/default.conf 
-
-RUN mkdir -p /home/jovyan/.irods
 
 ENTRYPOINT ["bash", "/bin/entry.sh"]
 
