@@ -1,5 +1,7 @@
 #!/bin/bash
 
+mkdir -p $HOME/.irods
+touch $HOME/.irods/irods_environment.json
 echo '{"irods_host": "data.cyverse.org", "irods_port": 1247, "irods_user_name": "$IPLANT_USER", "irods_zone_name": "iplant"}' >> $HOME/.irods/irods_environment.json
 
 echo "export PATH=$PATH:/opt/conda/bin" >> ~/.bashrc
