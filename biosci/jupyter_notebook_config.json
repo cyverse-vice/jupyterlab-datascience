@@ -1,10 +1,11 @@
 {
     "NotebookApp": {
-    "allow_origin": "*",
-    "token": "",
-    "password": "",
-    "nbserver_extensions": {
-    "jupyterlab": true
+      "allow_origin" : "*",
+        "token":"",
+        "password":"",
+      "nbserver_extensions": {
+        "jupyterlab": true
+      }
     }
-    }
-    }
+  }
+  
