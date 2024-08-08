@@ -4,7 +4,13 @@ USER root
 
 # Install a few dependencies for goCommands, text editing, and monitoring instances
 RUN apt update && \
-    apt install -y lsb-release apt-transport-https curl libfreetype6-dev pkg-config libx11-dev gcc less software-properties-common apt-utils glances htop nano 
+    apt upgrade -y && \
+    apt install -y lsb-release apt-transport-https curl libfreetype6-dev pkg-config libx11-dev gcc less software-properties-common apt-utils glances htop nano
+
+# Install libs 
+RUN echo "deb http://security.ubuntu.com/ubuntu focal-security main" | sudo tee /etc/apt/sources.list.d/focal-security.list && \
+    sudo apt-get update && \
+    sudo apt-get install libssl1.1 libnss3-dev libgdk-pixbuf2.0-dev libgtk-3-dev libxss-dev -y
 
 # Install Go
 RUN wget -q -c https://dl.google.com/go/go1.21.5.linux-amd64.tar.gz -O - | tar -xz -C /usr/local
@@ -34,15 +40,9 @@ RUN usermod -aG jovyan jovyan
 
 # Install RStudio
 RUN apt update && apt install --yes gdebi-core && \
-    wget https://download2.rstudio.org/server/jammy/amd64/rstudio-server-2022.12.0-353-amd64.deb && \
-    gdebi -n rstudio-server-2022.12.0-353-amd64.deb && \
-    rm rstudio-server-2022.12.0-353-amd64.deb && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
-
-# Install Shiny Server
-RUN wget https://download3.rstudio.org/ubuntu-18.04/x86_64/shiny-server-1.5.20.1002-amd64.deb && \
-    gdebi -n shiny-server-1.5.20.1002-amd64.deb && \
-    rm shiny-server-1.5.20.1002-amd64.deb && \
+    wget https://s3.amazonaws.com/rstudio-ide-build/server/focal/amd64/rstudio-server-2023.06.0-421-amd64.deb && \
+    gdebi -n rstudio-server-2023.06.0-421-amd64.deb && \
+    rm rstudio-server-2023.06.0-421-amd64.deb && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # install git-credential-manager 
@@ -53,12 +53,13 @@ RUN dpkg -i gcm-linux_amd64.2.5.0.deb && \
 # set the ENV for the credential type
 ENV GCM_CREDENTIAL_STORE=cache
 
+RUN sudo rm /etc/apt/sources.list.d/focal-security.list
+
 USER jovyan
 WORKDIR /home/jovyan
 
 # Install Jupyter Lab Proxy extensions (cards in Launcher)
-RUN mamba install --quiet --yes jupyter-rsession-proxy jupyter-server-proxy && \
-    pip install jupyter-shiny-proxy
+RUN mamba install --quiet --yes jupyter-rsession-proxy=2.1.0 jupyter-server-proxy=4.0.0
     
 # Install and configure jupyter lab. 
 COPY jupyter_notebook_config.json /opt/conda/etc/jupyter/jupyter_notebook_config.json
