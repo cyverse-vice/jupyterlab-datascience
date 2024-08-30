@@ -7,14 +7,17 @@ RUN pip install --upgrade --force-reinstall zstandard && \
     pip install --upgrade --force-reinstall zstd
 
 # Install conda packages
-RUN mamba install -c bioconda blast fastqc multiqc star bowtie2 bwa hisat2 gatk4 busco nextflow snakemake samtools -y 
+RUN mamba install -c bioconda blast fastqc multiqc star bowtie2 bwa hisat2 gatk4 busco nextflow snakemake samtools stringtie -y 
 
 ## Install tophat2
 RUN conda create -n tophat python=2 tophat -c bioconda
 
+## Install r-rodbc or ballgown
+RUN mamba install -c conda-forge r-rodbc -y
+
 # Install R packages and expose PATH
 RUN R -e "install.packages('BiocManager', repos='https://cloud.r-project.org')"
-RUN R -e "BiocManager::install(c('DESeq2', 'ggplot2', 'GenomeInfoDb'), update = FALSE, ask = FALSE)"
+RUN R -e "BiocManager::install(c('DESeq2', 'ggplot2', 'GenomeInfoDb', 'ballgown'), update = TRUE, ask = FALSE)"
 RUN echo "rsession-ld-library-path=/opt/conda/lib" >> /etc/rstudio/rserver.conf 
 
 USER jovyan
