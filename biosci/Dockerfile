@@ -20,6 +20,18 @@ RUN R -e "install.packages('BiocManager', repos='https://cloud.r-project.org')"
 RUN R -e "BiocManager::install(c('DESeq2', 'ggplot2', 'GenomeInfoDb', 'ballgown'), update = TRUE, ask = FALSE)"
 RUN echo "rsession-ld-library-path=/opt/conda/lib" >> /etc/rstudio/rserver.conf 
 
+# Install more tools
+RUN mamba install -c bioconda bcftools gatk4 -y
+
+# Install SRA-Toolkit
+RUN wget --output-document sratoolkit.tar.gz https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/current/sratoolkit.current-ubuntu64.tar.gz
+RUN tar -vxzf sratoolkit.tar.gz && rm sratoolkit.tar.gz && \
+    echo "export PATH=$PATH:/home/jovyan/sratoolkit.3.1.1-ubuntu64/bin" >> ~/.bashrc
+
+# Install vim and update
+RUN sudo apt-get update && sudo apt-get upgrade -y
+RUN sudo apt-get install vim -y
+
 USER jovyan
 WORKDIR /home/jovyan
 
