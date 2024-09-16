@@ -18,6 +18,7 @@ RUN mamba install -c conda-forge r-rodbc -y
 # Install R packages and expose PATH
 RUN R -e "install.packages('BiocManager', repos='https://cloud.r-project.org')"
 RUN R -e "BiocManager::install(c('DESeq2', 'ggplot2', 'GenomeInfoDb', 'ballgown'), update = TRUE, ask = FALSE)"
+RUN R -e "BiocManager::install('ballgown', update = TRUE, ask = FALSE)"
 RUN echo "rsession-ld-library-path=/opt/conda/lib" >> /etc/rstudio/rserver.conf 
 
 # Install more tools
