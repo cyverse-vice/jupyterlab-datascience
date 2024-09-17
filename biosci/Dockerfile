@@ -29,9 +29,11 @@ RUN wget --output-document sratoolkit.tar.gz https://ftp-trace.ncbi.nlm.nih.gov/
 RUN tar -vxzf sratoolkit.tar.gz && rm sratoolkit.tar.gz && \
     echo "export PATH=$PATH:/home/jovyan/sratoolkit.3.1.1-ubuntu64/bin" >> ~/.bashrc
 
-# Install vim and update
+# Install vim, subread, htcount and update
 RUN sudo apt-get update && sudo apt-get upgrade -y
 RUN sudo apt-get install vim -y
+RUN sudo apt-get install subread -y 
+RUN mamba install -c bioconda htseq -y
 
 USER jovyan
 WORKDIR /home/jovyan
