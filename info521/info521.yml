@@ -1,0 +1,15 @@
+name: INFO521
+channels:
+  - conda-forge
+dependencies:
+  - python==3.12.*
+  - jupyter
+  - jupytext
+  - matplotlib
+  - numpy 
+  - pylint
+  - ruff
+  - pytest
+  - pandas
+  - scikit-learn
+  - tqdm
