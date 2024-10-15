@@ -29,11 +29,17 @@ RUN wget --output-document sratoolkit.tar.gz https://ftp-trace.ncbi.nlm.nih.gov/
 RUN tar -vxzf sratoolkit.tar.gz && rm sratoolkit.tar.gz && \
     echo "export PATH=$PATH:/home/jovyan/sratoolkit.3.1.1-ubuntu64/bin" >> ~/.bashrc
 
-# Install vim, subread, htcount and update
+# Install vim, subread, htcount, salmon, graphviz (for DAG) and update
 RUN sudo apt-get update && sudo apt-get upgrade -y
 RUN sudo apt-get install vim -y
 RUN sudo apt-get install subread -y 
-RUN mamba install -c bioconda htseq -y
+RUN mamba install -c bioconda htseq salmon -y
+RUN sudo apt-get install graphviz -y
+
+# Install pheatmap and enchancedvolcano
+RUN R -e "BiocManager::install('EnhancedVolcano', update = TRUE, ask = FALSE)"
+RUN R -e "install.packages('pheatmap', repos='https://cran.r-project.org/')"
+RUN R -e "remotes::install_version('matrixStats', version='1.1.0', repos='https://cran.r-project.org/')"
 
 USER jovyan
 WORKDIR /home/jovyan
