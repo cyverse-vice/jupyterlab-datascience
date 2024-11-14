@@ -8,30 +8,32 @@ RUN pip install --upgrade --force-reinstall zstandard && \
 
 # Install devtools deps 
 RUN apt update && \
-    apt install libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev -y
+    apt install libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev libcurl4-openssl-dev libssl-dev libxml2-dev -y && \
+    apt upgrade -y
 
-# Install conda packages
-RUN mamba install -c bioconda -c conda-forge libdeflate=1.22 blast fastqc multiqc star bowtie2 bwa hisat2 gatk4 nextflow snakemake samtools stringtie -y
+# Give user powers & export env
+ARG LOCAL_USER=jovyan
+ARG PRIV_CMDS='ALL'
+RUN usermod -aG sudo jovyan && \
+    echo "$LOCAL_USER ALL=NOPASSWD: $PRIV_CMDS" >> /etc/sudoers
 
-USER jovyan
-
-# Create
+# Create env & export lib env
 COPY environment.yml /home/jovyan/environment.yml
 RUN mamba update mamba -y 
 RUN mamba env create -f environment.yml && \
-    mamba install -n biosci ipykernel -y && \
-    /opt/conda/envs/biosci/bin/python -m ipykernel install --name "biosci" --user 
-RUN conda init bash
-RUN echo "conda activate biosci" >> ~/.bashrc && \ 
-    /bin/bash -c "conda activate biosci"   
-
-USER root
+    mamba install -n biosci ipykernel -y
+RUN echo "conda activate biosci" >> ~/.bashrc && \
+    bash -c 'echo "export PKG_CONFIG_PATH=${CONDA_PREFIX}/lib/pkgconfig:${PKG_CONFIG_PATH}" >> ~/.bashrc' && \
+    source ~/.bashrc 
 
 ## Install tophat2
 RUN conda create -n tophat python=2 tophat -c bioconda
 
 ## Install r-rodbc for ballgown
 RUN mamba install -c conda-forge r-rodbc -y
+
+# Install R packages and expose PATH
+RUN echo "rsession-ld-library-path=/opt/conda/lib" >> /etc/rstudio/rserver.conf 
 
 # Install R packages and expose PATH
 RUN R -e "install.packages('BiocManager', repos='https://cloud.r-project.org')"
@@ -47,28 +49,34 @@ RUN wget --output-document sratoolkit.tar.gz https://ftp-trace.ncbi.nlm.nih.gov/
 RUN tar -vxzf sratoolkit.tar.gz && rm sratoolkit.tar.gz && \
     echo "export PATH=$PATH:/home/jovyan/sratoolkit.3.1.1-ubuntu64/bin" >> ~/.bashrc
 
-# Install vim, subread, htcount, salmon, graphviz (for DAG) and update
-RUN sudo apt-get update && sudo apt-get upgrade -y
-RUN sudo apt-get install vim -y
-RUN sudo apt-get install subread -y 
-# RUN mamba install -c bioconda htseq salmon -y
-RUN sudo apt-get install graphviz -y
+# Install vim, subread, htcount, graphviz (for DAG) and update
+RUN apt-get update && sudo apt-get upgrade -y && \
+    apt-get install vim htcount pearl subread graphviz -y
+
+# Install Java (OpenJDK)
+RUN apt-get update && apt-get install -y \
+    openjdk-17-jdk \
+    && rm -rf /var/lib/apt/lists/*
+# Set JAVA_HOME environment variable
+ENV JAVA_HOME /usr/lib/jvm/java-17-openjdk-amd64
+# Verify installation
+RUN java -version
+
+# Obtain and extract CIRI2
+RUN wget https://downloads.sourceforge.net/project/ciri/CIRI-full/CIRI_Full_v2.1.1.jar && \
+    mv CIRI_Full_v2.1.1.jar /home/jovyan/work/CIRI-full.jar && \
+    echo "export PATH=$PATH:/home/jovyan/work" >> ~/.bashrc
 
 # Add path for R packages (tidyverse, ragg)
 RUN export PKG_CONFIG_PATH=$CONDA_PREFIX/lib/pkgconfig:$PKG_CONFIG_PATH
 ENV PKG_CONFIG_PATH=$CONDA_PREFIX/lib/pkgconfig:$PKG_CONFIG_PATH
 
 # Install pheatmap and enchancedvolcano
-RUN R -e "BiocManager::install('EnhancedVolcano', update = TRUE, ask = FALSE)"
-RUN R -e "install.packages(c('pheatmap', 'tidyverse', 'dplyr', 'gridExtra', 'RColorBrewer', 'rgl', 'vipor'), repos='https://cran.r-project.org/', dependencides = TRUE)"
-RUN R -e "install.packages('remotes', repos='https://cran.r-project.org/')"
+RUN R -e "install.packages(c('pheatmap', 'dplyr', 'gridExtra', 'RColorBrewer', 'rgl', 'vipor', 'remotes'), repos='https://cran.r-project.org/', dependencides = TRUE)"
+RUN R -e "BiocManager::install(c('EnhancedVolcano', 'DelayedMatrixStats', 'edgeR', 'AnnotationDbi', 'org.Hs.eg.db','multtest', 'slingshot', 'SingleR', 'celldex', 'limma', 'fgsea'),  update = TRUE, ask = FALSE)"
 RUN R -e "remotes::install_version('matrixStats', version='1.4.1', repos='https://cran.r-project.org/')"
-RUN R -e "BiocManager::install('DelayedMatrixStats')"
-RUN R -e "BiocManager::install(c('edgeR', 'AnnotationDbi', 'org.Hs.eg.db', 'limma', 'fgsea'))"
-# RUN R -e "BiocManager::install(c('edgeR', 'AnnotationDbi', 'org.Hs.eg.db', 'multtest', 'slingshot', 'SingleR', 'celldex', 'limma', 'fgsea'))"
-# RUN R -e "install.packages('devtools', repos='https://cran.r-project.org/')"
-#RUN R -e "remotes::install_github('immunogenomics/harmony')" && \
-#    R -e "remotes::install_github('chris-mcginnis-ucsf/DoubletFinder')"
+RUN R -e "devtools::install_github('immunogenomics/harmony')" && \
+    R -e "devtools::install_github('chris-mcginnis-ucsf/DoubletFinder')"
 
 # Install Seurat and associated packages
 # RUN R -e "install.packages('SeuratObject', repos='https://cran.r-project.org/')"
