@@ -1,0 +1,21 @@
+name: biosci
+channels:
+        - bioconda
+dependencies:
+        - bcftools 
+        - htseq 
+        - salmon 
+        - blast 
+        - fastqc 
+        - multiqc 
+        - star 
+        - bowtie2 
+        - bwa 
+        - hisat2 
+        - gatk4 
+        - busco 
+        - nextflow 
+        - snakemake 
+        - samtools 
+        - stringtie
+        - mlflow

@@ -1,0 +1,9 @@
+name: biosci
+channels:
+        - bioconda
+        - r
+        - conda-forge
+dependencies:
+        - salmon 
+        - r-devtools
+        - r-tidyverse
