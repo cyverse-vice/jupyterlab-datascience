@@ -1,7 +1,37 @@
 name: biosci
 channels:
         - bioconda
+        - r
+        - conda-forge
 dependencies:
+        - r-base==4.4.1 
+        - htseq 
+        - salmon 
+        - r-devtools 
+        - r-tidyverse 
+        - r-rodbc 
+        - r-biocmanager 
+        - r-pheatmap 
+        - r-dplyr 
+        - r-gridExtra 
+        - r-rcolorbrewer 
+        - r-rgl 
+        - r-vipor 
+        - r-remotes
+        - r-gridextra 
+        - r-matrixstats==1.4.1 
+        - r-seurat==5.1.0
+        - r-seuratobject
+        - r-curl
+        - matplotlib
+        - seaborn
+        - plotly
+        - statsmodels
+        - scikit-learn
+        - numpy
+        - scipy
+        - pandas
+        - minimap2
         - bcftools 
         - htseq 
         - salmon 
@@ -17,5 +47,6 @@ dependencies:
         - nextflow 
         - snakemake 
         - samtools 
-        - stringtie
-        - mlflow
+        - stringtie 
+        - mlflow 
+        - bcftools 

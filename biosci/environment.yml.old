@@ -1,0 +1,27 @@
+name: biosci
+channels:
+        - bioconda
+        - r
+        - conda-forge
+dependencies:
+        - bcftools 
+        - htseq 
+        - salmon 
+        - blast 
+        - fastqc 
+        - multiqc 
+        - star 
+        - bowtie2 
+        - bwa 
+        - hisat2 
+        - gatk4 
+        - busco 
+        - nextflow 
+        - snakemake 
+        - samtools 
+        - stringtie
+        - mlflow
+        - r-devtools
+        - r-tidyverse
+        - r-rodbc
+
