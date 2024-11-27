@@ -88,6 +88,16 @@ RUN wget https://github.com/ShiLab-Bioinformatics/subread/releases/download/2.0.
     rm -r subread-2.0.2-Linux-x86_64*
 
 RUN sudo chmod -R a+wx /opt/conda/envs/biosci/lib/R/library
+RUN touch ~/.Rprofile && \
+    echo ".libPaths(c('/opt/conda/envs/biosci/lib/R/library', .libPaths()))" >> ~/.Rprofile
+RUN sudo chmod -R a+wx /home/jovyan/
+
+# Specify the R binary to use
+ENV RSTUDIO_WHICH_R=/opt/conda/envs/biosci/bin/R
+RUN echo "rsession-which-r=/opt/conda/envs/biosci/bin/R" >> /etc/rstudio/rserver.conf
+
+# Update the LD_LIBRARY_PATH for RStudio Server
+RUN sed -i 's|^rsession-ld-library-path=.*|rsession-ld-library-path=/opt/conda/envs/biosci/lib|' /etc/rstudio/rserver.conf
 
 USER jovyan
 WORKDIR /home/jovyan
@@ -102,7 +112,8 @@ RUN mkdir -p /home/jovyan/.irods
 #RUN echo "export PATH='$PATH:/opt/conda/envs/biosci/bin:/opt/conda/condabin:/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/go/bin'" >> ~/.bashrc && \
 #    echo "export PATH='$PATH:/home/jovyan/work'" >> ~/.bashrc && \
 #    echo "export PATH='$PATH:/home/jovyan/sratoolkit.3.1.1-ubuntu64/bin'" >> ~/.bashrc
-RUN echo "source ~/.bashrc" >> ~/.bash_profile && \
-    echo "export PATH=$PATH:/home/jovyan/sratoolkit.3.1.1-ubuntu64/bin" >> ~/.bash_profile
+RUN echo "source ~/.bashrc" >> ~/.bash_profile
+#    echo "export PATH=$PATH:/home/jovyan/sratoolkit.3.1.1-ubuntu64/bin" >> ~/.bash_profile && \
+#    echo "export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/:$LD_LIBRARY_PATH" >> ~/.bash_profile
 
 ENTRYPOINT ["bash", "/bin/entry.sh"]

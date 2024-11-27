@@ -49,4 +49,5 @@ dependencies:
         - samtools 
         - stringtie 
         - mlflow 
-        - bcftools 
+        - bcftools
+        - gcc=14.2.0 

@@ -1,5 +1,8 @@
-### THIS DOCKERFILE CONTAINS WORKING VERSIONS OF JUPYER AND RSTUDIO ###
-### USE AS BACKUP 
+### THIS DOCKERFILE CONTAINS WORKING VERSIONS OF JUPYER AND RSTUDIO 4.4.1 ##############################
+### THIS FILE GENERATES THE harbor.cyverse.org/vice/jupyter/datascience:3.6.3-rstudio-4.4 STABLE IMAGE #
+### REQUIRES THE STANDARD entry.sh AND jupyter_notebook_config.json FILES ##############################
+### USE AS BACKUP ######################################################################################
+
 FROM jupyter/datascience-notebook:lab-3.6.3
 
 USER root
