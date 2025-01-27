@@ -30,19 +30,6 @@ RUN usermod -aG sudo jovyan && \
 RUN addgroup jovyan
 RUN usermod -aG jovyan jovyan
 
-# Install RStudio
-RUN apt update && apt install --yes gdebi-core && \
-    wget https://download2.rstudio.org/server/jammy/amd64/rstudio-server-2024.12.0-467-amd64.deb && \
-    gdebi -n rstudio-server-2024.12.0-467-amd64.deb && \
-    rm rstudio-server-2024.12.0-467-amd64.deb && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
-
-# Install Shiny Server
-RUN wget https://download3.rstudio.org/ubuntu-18.04/x86_64/shiny-server-1.5.22.1017-amd64.deb && \
-    gdebi -n shiny-server-1.5.22.1017-amd64.deb && \
-    rm shiny-server-1.5.22.1017-amd64.deb && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
-
 # install git-credential-manager 
 RUN wget https://github.com/git-ecosystem/git-credential-manager/releases/download/v2.5.0/gcm-linux_amd64.2.5.0.deb
 RUN dpkg -i gcm-linux_amd64.2.5.0.deb && \
@@ -53,13 +40,6 @@ ENV GCM_CREDENTIAL_STORE=cache
 
 USER jovyan
 WORKDIR /home/jovyan
-
-# Install VS Code Server
-RUN curl -fsSL https://code-server.dev/install.sh | sh && \
-    python3 -m pip install jupyter-vscode-proxy
-
-## Install Jupyter Lab RStudio extensions (cards in Launcher)
-RUN python3 -m pip install git+https://github.com/jupyterhub/jupyter-rsession-proxy@216d9e5e65f0a16af34cf1bafc418c4daa1e08d6 jupyter-shiny-proxy
 
 # Install Jupyter-AI https://jupyter-ai.readthedocs.io/en/latest/users/index.html#installation
 RUN python3 -m pip install jupyter-ai && \ 
