@@ -15,7 +15,10 @@ RUN python -m ipykernel install --user --name mmtf-pyspark --display-name "Pytho
 
 # using ~/.bash_profile instead of ~/.bashrc for non-interactive tty (-it) containers
 RUN echo "source activate mmtf-pyspark" >> /home/jovyan/.bash_profile
-RUN . /opt/conda/etc/profile.d/conda.sh && conda deactivate && conda activate mmtf-pyspark && ipython kernel install --name "mmtf-pyspark" --user 
+# Install Jupyter kernel for the new environment
+RUN . /opt/conda/etc/profile.d/conda.sh && \
+    conda deactivate && conda activate mmtf-pyspark && \
+    ipython kernel install --name "mmtf-pyspark" --user 
 
 # Optionally, automatically activate your environment upon shell start
 RUN echo "source activate mmtf-pyspark" >> ~/.bashrc
