@@ -1,6 +1,5 @@
 # https://quay.io/repository/jupyter/datascience-notebook
 FROM quay.io/jupyter/datascience-notebook:latest
-
 USER root
 
 # Install a few dependencies for goCommands, text editing, and monitoring instances
