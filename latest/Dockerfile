@@ -31,7 +31,7 @@ RUN usermod -aG jovyan jovyan
 
 # Install RStudio
 RUN apt update && apt install --yes gdebi-core && \
-    wget https://download2.rstudio.org/server/jammy/amd64/rstudio-server-2025.05.1-513-amd64.deb && \
+    wget https://download2.rstudio.org/server/jammy/amd64/rstudio-server-2025.09.0-387-amd64.deb && \
     gdebi -n rstudio-server-2025.05.1-513-amd64.deb && \
     rm rstudio-server-2025.05.1-513-amd64.deb && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
