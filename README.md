@@ -9,17 +9,43 @@
 
 ---
 
-[Project Jupyter](https://jupyter.org/) Datascience Notebook with a few added packages for use in [CyVerse Discovery Environment](https://de.cyverse.org)
+[Project Jupyter](https://jupyter.org/) Datascience Notebook with additional packages and tools for use in [CyVerse Discovery Environment](https://de.cyverse.org)
 
-Jupyter Lab Datascience image built from the [Datascience Notebook](https://hub.docker.com/r/jupyter/datascience-notebook) for [CyVerse VICE](https://cyverse-visual-interactive-computing-environment.readthedocs-hosted.com/en/latest/index.html). Project Jupyter's base image requires a couple additional configuration files for it be compatible with CyVerse Kubernetes orchestration and iRODS data store.
+Jupyter Lab Datascience image built from the [Datascience Notebook](https://hub.docker.com/r/jupyter/datascience-notebook) for [CyVerse VICE](https://cyverse-visual-interactive-computing-environment.readthedocs-hosted.com/en/latest/index.html). This image includes GitHub CLI, enhanced K8s CSI driver support, and optimized build layers for improved performance and reproducibility in CyVerse Kubernetes orchestration with iRODS data store integration.
 
 [![!Harbor](https://github.com/cyverse-vice/jupyterlab-datascience/actions/workflows/harbor.yml/badge.svg)](https://github.com/cyverse-vice/jupyterlab-datascience/actions) ![GitHub commits since tagged version](https://img.shields.io/github/commits-since/cyverse-vice/jupyterlab-datascience/latest/main?style=flat-square) 
 
-| quick launch | 
-| ------------ | 
+| quick launch |
+| ------------ |
 | <a href="https://de.cyverse.org/apps/de/cc77b788-bc45-11eb-9934-008cfa5ae621/launch" target="_blank"><img src="https://img.shields.io/badge/Datascience-latest-orange?style=plastic&logo=jupyter"></a> |
 | <a href="https://de.cyverse.org/apps/de/0bb01716-5d03-11ec-b195-008cfa5ae621/launch" target="_blank"><img src="https://img.shields.io/badge/Geospatial-latest-orange?style=plastic&logo=jupyter"></a> |
 | <a href="https://de.cyverse.org/apps/de/c2227314-1995-11ed-986c-008cfa5ae621/launch" target="_blank"><img src="https://img.shields.io/badge/RStudio-latest-orange?style=plastic&logo=r"></a> |
+
+## Features
+
+This image includes the following additional tools and features beyond the base Jupyter datascience notebook:
+
+### Development Tools
+- **GitHub CLI (`gh`)** - Command-line tool for GitHub operations
+- **Git Credential Manager** - Secure credential storage for Git operations
+- **VS Code Server** - Browser-based VS Code environment
+- **Jupyter AI** - AI assistant integration for Jupyter notebooks
+
+### Data Science & Analytics
+- **RStudio Server** - Web-based R development environment
+- **Shiny Server** - Host interactive R applications
+- **GoCommands** - CyVerse data transfer utilities
+- **iRODS integration** - Direct access to CyVerse data store
+
+### System Utilities
+- **Enhanced monitoring** - htop, glances for system monitoring
+- **Development tools** - gcc, build essentials, package managers
+- **Kubernetes CSI driver support** - Automatic environment file sourcing
+
+### Security Features
+- **Sudo access** for jovyan user (configurable permissions)
+- **Secure credential management** with Git Credential Manager
+- **Environment file sourcing** from K8s CSI driver mounted secrets
 
 ## Development
 
