@@ -1,21 +1,43 @@
 # https://quay.io/repository/jupyter/datascience-notebook
+# CyVerse Datascience Notebook with GitHub CLI, optimized for K8s deployment
 FROM quay.io/jupyter/datascience-notebook:latest
 USER root
 
-# Install a few dependencies for goCommands, text editing, and monitoring instances
+# Install system dependencies, GitHub CLI, and tools in a single layer
 RUN apt update && \
-    apt install -y lsb-release apt-transport-https curl libfreetype6-dev pkg-config libx11-dev gcc gettext less software-properties-common apt-utils glances htop nano 
+    apt install -y \
+        lsb-release \
+        apt-transport-https \
+        curl \
+        wget \
+        libfreetype6-dev \
+        pkg-config \
+        libx11-dev \
+        gcc \
+        gettext \
+        less \
+        software-properties-common \
+        apt-utils \
+        glances \
+        htop \
+        nano \
+        sudo \
+        gdebi-core \
+        gnupg2 && \
+    # Install GitHub CLI
+    curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg && \
+    chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null && \
+    apt update && \
+    apt install -y gh && \
+    # Clean up
+    apt clean && \
+    rm -rf /var/lib/apt/lists/*
 
-# Install GoCommands https://learning.cyverse.org/ds/gocommands/ 
+# Install GoCommands https://learning.cyverse.org/ds/gocommands/
 RUN cd /usr/local/bin/ && \
     GOCMD_VER=$(curl -L -s https://raw.githubusercontent.com/cyverse/gocommands/main/VERSION.txt); \
     curl -L -s https://github.com/cyverse/gocommands/releases/download/${GOCMD_VER}/gocmd-${GOCMD_VER}-linux-amd64.tar.gz | tar zxvf -
-
-# Add sudo to jovyan user
-RUN apt update && \
-    apt install -y sudo && \
-    apt clean && \
-    rm -rf /var/lib/apt/lists/*
     
 ARG LOCAL_USER=jovyan
 
@@ -29,23 +51,23 @@ RUN usermod -aG sudo jovyan && \
 RUN addgroup jovyan
 RUN usermod -aG jovyan jovyan
 
-# Install RStudio
-RUN apt update && apt install --yes gdebi-core && \
-    wget https://download2.rstudio.org/server/jammy/amd64/rstudio-server-2025.09.0-387-amd64.deb && \
-    gdebi -n rstudio-server-2025.05.1-513-amd64.deb && \
-    rm rstudio-server-2025.05.1-513-amd64.deb && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+# Install RStudio (pinned version for reproducibility)
+ARG RSTUDIO_VERSION=2025.09.0-387
+RUN wget https://download2.rstudio.org/server/jammy/amd64/rstudio-server-${RSTUDIO_VERSION}-amd64.deb && \
+    gdebi -n rstudio-server-${RSTUDIO_VERSION}-amd64.deb && \
+    rm rstudio-server-${RSTUDIO_VERSION}-amd64.deb
 
-# Install Shiny Server
-RUN wget https://download3.rstudio.org/ubuntu-20.04/x86_64/shiny-server-1.5.23.1030-amd64.deb && \
-    gdebi -n shiny-server-1.5.23.1030-amd64.deb && \
-    rm shiny-server-1.5.23.1030-amd64.deb && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+# Install Shiny Server (pinned version for reproducibility)
+ARG SHINY_VERSION=1.5.23.1030
+RUN wget https://download3.rstudio.org/ubuntu-20.04/x86_64/shiny-server-${SHINY_VERSION}-amd64.deb && \
+    gdebi -n shiny-server-${SHINY_VERSION}-amd64.deb && \
+    rm shiny-server-${SHINY_VERSION}-amd64.deb
 
-# install git-credential-manager 
-RUN wget https://github.com/git-ecosystem/git-credential-manager/releases/download/v2.6.1/gcm-linux_amd64.2.6.1.deb
-RUN dpkg -i gcm-linux_amd64.2.6.1.deb && \
-    rm gcm-linux_amd64.2.6.1.deb
+# Install git-credential-manager (pinned version for reproducibility)
+ARG GCM_VERSION=2.6.1
+RUN wget https://github.com/git-ecosystem/git-credential-manager/releases/download/v${GCM_VERSION}/gcm-linux_amd64.${GCM_VERSION}.deb && \
+    dpkg -i gcm-linux_amd64.${GCM_VERSION}.deb && \
+    rm gcm-linux_amd64.${GCM_VERSION}.deb
 
 # set the ENV for the credential type
 ENV GCM_CREDENTIAL_STORE=cache
