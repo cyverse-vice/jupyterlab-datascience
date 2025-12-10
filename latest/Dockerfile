@@ -11,10 +11,13 @@ RUN apt update && \
         curl \
         wget \
         libfreetype6-dev \
+        libssl-dev \        
         pkg-config \
+        psmisc \
         libx11-dev \
         gcc \
         gettext \
+        libclang-dev \
         less \
         software-properties-common \
         apt-utils \
@@ -52,28 +55,32 @@ RUN addgroup jovyan
 RUN usermod -aG jovyan jovyan
 
 # Install RStudio (pinned version for reproducibility)
-ARG RSTUDIO_VERSION=2025.09.0-387
-RUN wget https://download2.rstudio.org/server/jammy/amd64/rstudio-server-${RSTUDIO_VERSION}-amd64.deb && \
-    gdebi -n rstudio-server-${RSTUDIO_VERSION}-amd64.deb && \
-    rm rstudio-server-${RSTUDIO_VERSION}-amd64.deb
+RUN wget https://download2.rstudio.org/server/jammy/amd64/rstudio-server-2025.09.2-418-amd64.deb && \
+    gdebi -n rstudio-server-2025.09.2-418-amd64.deb && \
+    rm rstudio-server-2025.09.2-418-amd64.deb
 
 # Install Shiny Server (pinned version for reproducibility)
-ARG SHINY_VERSION=1.5.23.1030
-RUN wget https://download3.rstudio.org/ubuntu-20.04/x86_64/shiny-server-${SHINY_VERSION}-amd64.deb && \
-    gdebi -n shiny-server-${SHINY_VERSION}-amd64.deb && \
-    rm shiny-server-${SHINY_VERSION}-amd64.deb
+RUN wget https://download3.rstudio.org/ubuntu-20.04/x86_64/shiny-server-1.5.23.1030-amd64.deb && \
+    gdebi -n shiny-server-1.5.23.1030-amd64.deb && \
+    rm shiny-server-1.5.23.1030-amd64.deb
 
 # Install git-credential-manager (pinned version for reproducibility)
-ARG GCM_VERSION=2.6.1
-RUN wget https://github.com/git-ecosystem/git-credential-manager/releases/download/v${GCM_VERSION}/gcm-linux_amd64.${GCM_VERSION}.deb && \
-    dpkg -i gcm-linux_amd64.${GCM_VERSION}.deb && \
-    rm gcm-linux_amd64.${GCM_VERSION}.deb
+RUN wget https://github.com/git-ecosystem/git-credential-manager/releases/download/v2.6.1/gcm-linux_amd64.2.6.1.deb && \
+    dpkg -i gcm-linux_amd64.2.6.1.deb && \
+    rm gcm-linux_amd64.2.6.1.deb
 
-# set the ENV for the credential type
-ENV GCM_CREDENTIAL_STORE=cache
+# Dependencies: NodeJS for Claude Code, OpenAI Codex, Gemini CLI
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+    apt update && \
+    apt-get install -y locales neofetch figlet w3m-img imagemagick s3fs fuse nodejs socat bubblewrap 
 
 USER jovyan
 WORKDIR /home/jovyan
+
+# Install Claude Code, OpenAI Codex, and Google Gemini CLI
+RUN npm config set prefix /home/jovyan/.npm-global && \
+    export PATH=/home/jovyan/.npm-global/bin:$PATH && \
+    npm install -g @anthropic-ai/claude-code @google/gemini-cli @openai/codex
 
 # Install VS Code Server
 RUN curl -fsSL https://code-server.dev/install.sh | sh && \
@@ -81,10 +88,6 @@ RUN curl -fsSL https://code-server.dev/install.sh | sh && \
 
 ## Install Jupyter Lab RStudio extensions (cards in Launcher)
 RUN python3 -m pip install git+https://github.com/jupyterhub/jupyter-rsession-proxy@216d9e5e65f0a16af34cf1bafc418c4daa1e08d6 jupyter-shiny-proxy
-
-# Install Jupyter-AI https://jupyter-ai.readthedocs.io/en/latest/users/index.html#installation
-RUN python3 -m pip install jupyter-ai && \ 
-    python3 -m pip install langchain_anthropic langchain_openai langchain_nvidia_ai_endpoints langchain_google_genai
 
 # Install Jupyter Lab Proxy extensions (cards in Launcher)
 RUN mamba install -c conda-forge jupyter-server-proxy 
