@@ -54,16 +54,6 @@ RUN usermod -aG sudo jovyan && \
 RUN addgroup jovyan
 RUN usermod -aG jovyan jovyan
 
-# Install RStudio (pinned version for reproducibility)
-RUN wget https://download2.rstudio.org/server/jammy/amd64/rstudio-server-2025.09.2-418-amd64.deb && \
-    gdebi -n rstudio-server-2025.09.2-418-amd64.deb && \
-    rm rstudio-server-2025.09.2-418-amd64.deb
-
-# Install Shiny Server (pinned version for reproducibility)
-RUN wget https://download3.rstudio.org/ubuntu-20.04/x86_64/shiny-server-1.5.23.1030-amd64.deb && \
-    gdebi -n shiny-server-1.5.23.1030-amd64.deb && \
-    rm shiny-server-1.5.23.1030-amd64.deb
-
 # Install git-credential-manager (pinned version for reproducibility)
 RUN wget https://github.com/git-ecosystem/git-credential-manager/releases/download/v2.6.1/gcm-linux_amd64.2.6.1.deb && \
     dpkg -i gcm-linux_amd64.2.6.1.deb && \
@@ -81,13 +71,6 @@ WORKDIR /home/jovyan
 RUN npm config set prefix /home/jovyan/.npm-global && \
     export PATH=/home/jovyan/.npm-global/bin:$PATH && \
     npm install -g @anthropic-ai/claude-code @google/gemini-cli @openai/codex
-
-# Install VS Code Server
-RUN curl -fsSL https://code-server.dev/install.sh | sh && \
-    python3 -m pip install jupyter-vscode-proxy
-
-## Install Jupyter Lab RStudio extensions (cards in Launcher)
-RUN python3 -m pip install git+https://github.com/jupyterhub/jupyter-rsession-proxy@216d9e5e65f0a16af34cf1bafc418c4daa1e08d6 jupyter-shiny-proxy
 
 # Install Jupyter Lab Proxy extensions (cards in Launcher)
 RUN mamba install -c conda-forge jupyter-server-proxy 
