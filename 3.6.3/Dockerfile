@@ -12,14 +12,14 @@ RUN apt update && \
     apt upgrade -y && \
     apt install -y lsb-release apt-transport-https curl libfreetype6-dev pkg-config libx11-dev gcc less software-properties-common apt-utils glances htop nano
 
-# Install libs 
+# Install libs
 RUN echo "deb http://security.ubuntu.com/ubuntu focal-security main" | sudo tee /etc/apt/sources.list.d/focal-security.list && \
     sudo apt-get update && \
     sudo apt-get install libssl1.1 libnss3-dev libgdk-pixbuf2.0-dev libgtk-3-dev libxss-dev -y
 
 # Install Go
 RUN wget -q -c https://dl.google.com/go/go1.21.5.linux-amd64.tar.gz -O - | tar -xz -C /usr/local
-ENV PATH=$PATH:/usr/local/go/bin 
+ENV PATH=$PATH:/usr/local/go/bin
 
 # Install GoCommands
 RUN cd /usr/local/bin/ && \
@@ -34,7 +34,7 @@ RUN apt update && \
     apt install -y sudo && \
     apt clean && \
     rm -rf /var/lib/apt/lists/*
-    
+
 ARG LOCAL_USER=jovyan
 ARG PRIV_CMDS='/bin/ch*,/bin/cat,/bin/gunzip,/bin/tar,/bin/mkdir,/bin/ps,/bin/mv,/bin/cp,/usr/bin/apt*,/usr/bin/pip*,/bin/yum,/bin/snap,/bin/curl,/bin/tee,/opt'
 
@@ -55,7 +55,7 @@ RUN apt update && apt install --yes gdebi-core && \
     rm rstudio-server-2023.06.0-421-amd64.deb && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# install git-credential-manager 
+# install git-credential-manager
 RUN wget https://github.com/git-ecosystem/git-credential-manager/releases/download/v2.5.0/gcm-linux_amd64.2.5.0.deb
 RUN dpkg -i gcm-linux_amd64.2.5.0.deb && \
     rm gcm-linux_amd64.2.5.0.deb
@@ -70,8 +70,8 @@ WORKDIR /home/jovyan
 
 # Install Jupyter Lab Proxy extensions (cards in Launcher)
 RUN mamba install --quiet --yes jupyter-rsession-proxy=2.1.0 jupyter-server-proxy=4.0.0
-    
-# Install and configure jupyter lab. 
+
+# Install and configure jupyter lab.
 COPY jupyter_notebook_config.json /opt/conda/etc/jupyter/jupyter_notebook_config.json
 
 # Rebuild the Jupyter Lab with new tools
