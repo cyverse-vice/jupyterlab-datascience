@@ -77,10 +77,13 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
 USER jovyan
 WORKDIR /home/jovyan
 
-# Install Claude Code, OpenAI Codex, and Google Gemini CLI
+# Install Claude Code using official installer
+RUN curl -fsSL https://claude.ai/install.sh | bash
+
+# Install OpenAI Codex and Google Gemini CLI via npm
 RUN npm config set prefix /home/jovyan/.npm-global && \
     export PATH=/home/jovyan/.npm-global/bin:$PATH && \
-    npm install -g @anthropic-ai/claude-code @google/gemini-cli @openai/codex && \
+    npm install -g @google/gemini-cli @openai/codex && \
     npm cache clean --force
 
 # Install VS Code Server and Jupyter extensions (combined for fewer layers)
