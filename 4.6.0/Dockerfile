@@ -51,10 +51,6 @@ RUN npm config set prefix /home/jovyan/.npm-global && \
     npm cache clean --force
 ENV PATH="/home/jovyan/.npm-global/bin:${PATH}"
 
-# Install OpenCode (https://opencode.ai/)
-RUN curl -fsSL https://opencode.ai/install | bash
-ENV PATH="/home/jovyan/.opencode/bin:${PATH}"
-
 # Copy entry script
 COPY entry.sh /bin
 RUN sudo chmod +x /bin/entry.sh
