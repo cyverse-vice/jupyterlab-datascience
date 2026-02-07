@@ -8,6 +8,11 @@ on:
     - cron: '0 0 * * 0'
   workflow_dispatch:
     inputs:
+      context:
+        description: 'Build context directory (e.g., latest, 4.6.0)'
+        required: false
+        default: 'latest'
+        type: string
       tag:
         description: 'Docker image tag to build'
         required: false
@@ -41,12 +46,12 @@ jobs:
           username: ${{ secrets.HARBOR_USERNAME }}
           password: ${{ secrets.HARBOR_PASSWORD }}
 
-      - name: Build and push latest
-        id: docker_build_latest
+      - name: Build and push
+        id: docker_build
         uses: docker/build-push-action@v5
         with:
-          context: latest
-          file: latest/Dockerfile
+          context: ${{ inputs.context || 'latest' }}
+          file: ${{ inputs.context || 'latest' }}/Dockerfile
           builder: ${{ steps.buildx.outputs.name }}
           push: true
           tags: harbor.cyverse.org/vice/jupyter/datascience:${{ inputs.tag || 'latest' }}
@@ -54,4 +59,4 @@ jobs:
           cache-to: type=local,dest=/tmp/.buildx-cache
 
       - name: Image digest
-        run: echo ${{ steps.docker_build_latest.outputs.digest }}
+        run: echo ${{ steps.docker_build.outputs.digest }}
