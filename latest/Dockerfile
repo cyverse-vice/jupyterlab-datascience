@@ -66,7 +66,7 @@ RUN wget -q https://download2.rstudio.org/server/jammy/amd64/rstudio-server-2024
          -O /tmp/rstudio-server.deb && \
     wget -q https://download3.rstudio.org/ubuntu-20.04/x86_64/shiny-server-1.5.23.1030-amd64.deb \
          -O /tmp/shiny-server.deb && \
-    wget -q https://github.com/git-ecosystem/git-credential-manager/releases/download/v2.6.1/gcm-linux_amd64.2.6.1.deb \
+    wget -q https://github.com/git-ecosystem/git-credential-manager/releases/download/v2.7.3/gcm-linux-x64-2.7.3.deb \
          -O /tmp/gcm.deb && \
     gdebi -n /tmp/rstudio-server.deb && \
     gdebi -n /tmp/shiny-server.deb && \
@@ -83,13 +83,10 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
 USER jovyan
 WORKDIR /home/jovyan
 
-# Install Claude Code using official installer
-RUN curl -fsSL https://claude.ai/install.sh | bash
-
-# Install OpenAI Codex and Google Gemini CLI via npm
+# Install Claude Code, OpenAI Codex, and Google Gemini CLI via npm
 RUN npm config set prefix /home/jovyan/.npm-global && \
     export PATH=/home/jovyan/.npm-global/bin:$PATH && \
-    npm install -g @google/gemini-cli @openai/codex && \
+    npm install -g @anthropic-ai/claude-code @google/gemini-cli @openai/codex && \
     npm cache clean --force
 ENV PATH="/home/jovyan/.npm-global/bin:${PATH}"
 
