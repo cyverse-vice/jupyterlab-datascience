@@ -85,10 +85,13 @@ WORKDIR /home/jovyan
 
 # Install Claude Code, OpenAI Codex, and Google Gemini CLI via npm
 RUN npm config set prefix /home/jovyan/.npm-global && \
-    export PATH=/home/jovyan/.npm-global/bin:$PATH && \
     npm install -g @anthropic-ai/claude-code @google/gemini-cli @openai/codex && \
     npm cache clean --force
-ENV PATH="/home/jovyan/.npm-global/bin:${PATH}"
+
+# Install OpenCode (https://opencode.ai/)
+RUN curl -fsSL https://opencode.ai/install | bash
+
+ENV PATH="/home/jovyan/.npm-global/bin:/home/jovyan/.opencode/bin:${PATH}"
 
 # Install VS Code Server and Jupyter extensions
 RUN curl -fsSL https://code-server.dev/install.sh | sh && \
