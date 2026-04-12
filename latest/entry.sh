@@ -5,9 +5,8 @@ mkdir -p $HOME/.irods
 touch $HOME/.irods/irods_environment.json
 echo '{"irods_host": "data.cyverse.org", "irods_port": 1247, "irods_user_name": "$IPLANT_USER", "irods_zone_name": "iplant"}' >> $HOME/.irods/irods_environment.json
 
-# Add conda to PATH
-echo "npm config set prefix /home/jovyan/.npm-global" && \
-echo "export PATH=/home/jovyan/.npm-global/bin:/opt/conda/bin:$PATH" >> ~/.bashrc 
+# Ensure npm global bin and OpenCode are on PATH for interactive shells
+grep -qF '.npm-global/bin' ~/.bashrc || echo 'export PATH="/home/jovyan/.npm-global/bin:/home/jovyan/.opencode/bin:$PATH"' >> ~/.bashrc
 
 # Copy configuration files from data store (legacy method)
 if [ -f /data-store/iplant/home/$IPLANT_USER/.gitconfig ]; then
