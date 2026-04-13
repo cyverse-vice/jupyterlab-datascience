@@ -89,7 +89,7 @@ RUN npm config set prefix /home/jovyan/.npm-global && \
     npm cache clean --force
 
 # Install OpenCode (https://opencode.ai/)
-RUN curl -fsSL https://opencode.ai/install | bash
+RUN curl -fsSL https://opencode.ai/install | bash -s -- --no-modify-path
 
 ENV PATH="/home/jovyan/.npm-global/bin:/home/jovyan/.opencode/bin:${PATH}"
 
